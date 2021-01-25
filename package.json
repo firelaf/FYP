@@ -1,0 +1,22 @@
+{
+  "name": "final_year_project",
+  "version": "1.0.0",
+  "description": "Non-Medical Support Worker Communication and Organisation Software",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "Daniel Sergilov",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  }
+}
