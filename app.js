@@ -17,4 +17,4 @@ app.use('/', routes);
 //Ports and listening
 const PORT = process.env.port || 5000;
 
-app.listen(PORT, () => console.log(`Server Started on Port ${PORT}...`))
+app.listen(PORT, () => console.log(`Server Started on Port ${PORT}...`));

@@ -15,7 +15,6 @@ router.get('/student', (req, res) =>
 router.get('/worker', (req, res) =>
 {
     res.sendFile(path.join(__dirname, '..', 'views', 'dashboard', 'worker.html'));
-    res.sendFile(path.join(__dirname, '..', 'views', 'js', 'dropdown.js'));
 });
 
 module.exports = router;
