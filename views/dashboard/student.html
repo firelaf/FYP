@@ -6,11 +6,12 @@
         <title>Student Dashboard</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="../css/index.css">
     </head>
     <body>
         <h1>Student Dashboard</h1>
         <h3>Request Support</h3>
-        <form action="/sendSupportRequest" method="POST">
+        <form action="/database/sendSupportRequest" method="POST">
             <label for="startTime">Start Time</label>
             <select name="startTime" id="start-time-dropdown" class="time-dropdown">
                 <!-- Filled by dropdown.js -->
@@ -39,6 +40,14 @@
             </select>
             <input type="submit" value="Request">
         </form>
+        <table class="requests-table" style="width: 100%">
+            <tr><td>Start Time</td>
+            <td>End Time</td>
+            <td>Requested Date</td>
+            <td>Accepted by Worker</td></tr>
+            <!-- Filled by requests_table.js -->
+        </table>
         <script src="../js/dropdown.js"></script>
+        <script src="../js/requests_table.js"></script>
     </body>
 </html>

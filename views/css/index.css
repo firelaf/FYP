@@ -1,3 +1,9 @@
 h1 {
     font-family: 'Arial';
 }
+tr {
+    width: 25%;
+}
+td {
+    width: 25%;
+}
