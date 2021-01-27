@@ -15,5 +15,5 @@ fetch('/database/all-requests', {method: 'POST'})
                                 <td>${requestDateParsed[0]}</td>
                                 <td>${item.assignedTo_id}</td></tr>`;
     })
-    console.log(resData);
+    //console.log(resData); DEBUG
 });

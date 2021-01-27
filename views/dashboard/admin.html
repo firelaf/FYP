@@ -9,8 +9,13 @@
     </head>
     <body>
         <h1>Admin Dashboard</h1>
-        <form action="/all-requests" method="POST">
-           <input type="submit" name="request" value="Request All Shifts">
-        </form>
+        <table class="requests-table" style="width: 100%">
+            <tr><td>Start Time</td>
+            <td>End Time</td>
+            <td>Requested Date</td>
+            <td>Accepted by Worker</td></tr>
+            <!-- Filled by requests_table.js -->
+        </table>
+        <script type="text/javascript" src="../js/requests_table.js"></script>
     </body>
 </html>
