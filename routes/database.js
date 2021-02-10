@@ -34,7 +34,7 @@ router.post('/requests', (req, res) =>
     }
     else
     {
-        let sql = `SELECT * FROM requests WHERE requester_id=${req.session.user_id};`;
+        sql = `SELECT * FROM requests WHERE requester_id=${req.session.user_id};`;
     }
     let query = db.query(sql, (err, result) => {
         if(err) throw err;
