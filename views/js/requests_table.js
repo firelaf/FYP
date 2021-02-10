@@ -1,8 +1,7 @@
 table = document.querySelector('.requests-table');
 
 
-
-fetch('/database/all-requests', {method: 'POST'})
+fetch('/database/requests', {method: 'POST'})
 .then(res => {
     return res.json();
 })

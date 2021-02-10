@@ -16,7 +16,8 @@ router.post('/sendSupportRequest', urlEncodedParser, (req, res) =>
     let day = req.body.day;
     let month = req.body.month;
 
-    let sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) VALUES('${startTime}', '${endTime}', '2021-${month}-${day}', 1)`;
+    let sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) 
+    VALUES('${startTime}', '${endTime}', '2021-${month}-${day}', ${req.session.user_id});`;
 
     console.log(sql);
     db.query(sql);
@@ -24,9 +25,17 @@ router.post('/sendSupportRequest', urlEncodedParser, (req, res) =>
     res.redirect('/dashboard/student');
 });
 
-router.post('/all-requests', (req, res) =>
+router.post('/requests', (req, res) =>
 {
-    let sql = 'SELECT * FROM requests;';
+    let sql;
+    if(req.session.user_type === 'A')
+    {
+        sql = 'SELECT * FROM requests;';
+    }
+    else
+    {
+        let sql = `SELECT * FROM requests WHERE requester_id=${req.session.user_id};`;
+    }
     let query = db.query(sql, (err, result) => {
         if(err) throw err;
         res.send(result);
