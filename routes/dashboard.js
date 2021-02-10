@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 
+//Routing for the 3 dashboards
 router.get('/admin', (req, res) =>
 {
     res.sendFile(path.join(__dirname, '..', 'views', 'dashboard', 'admin.html'));

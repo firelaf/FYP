@@ -9,6 +9,7 @@ fetch('/database/requests', {method: 'POST'})
     resData.forEach(item => {
         let requestDateParsed = item.requestDate.split("T");
 
+        //TO-DO: LET THE ADMIN SEE REQUESTER_ID
         table.innerHTML += `<tr><td>${item.startTime}</td>
                                 <td>${item.endTime}</td>
                                 <td>${requestDateParsed[0]}</td>

@@ -3,7 +3,7 @@ const path = require('path');
 const router = express.Router();
 const db = require('../private/database_connection');
 
-
+//Splitting the routing into smaller files
 const db_model = require('./database');
 const dashboard = require('./dashboard');
 const login = require('./login');
