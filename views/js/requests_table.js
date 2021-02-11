@@ -13,7 +13,8 @@ fetch('/database/requests', {method: 'POST'})
         table.innerHTML += `<tr><td>${item.startTime}</td>
                                 <td>${item.endTime}</td>
                                 <td>${requestDateParsed[0]}</td>
-                                <td>${item.assignedTo_id}</td></tr>`;
+                                <td>${item.assignedTo_id}</td>
+                                <td>${item.requester_id}</td></tr>`;
     })
     //console.log(resData); DEBUG
 });
