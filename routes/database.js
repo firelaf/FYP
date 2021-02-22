@@ -5,10 +5,12 @@ const bodyParser = require('body-parser');
 router = express.Router();
 
 const db = require('../private/database_connection');
-
 const urlEncodedParser = bodyParser.urlencoded({extended: true});
 
-//Process for sending requests from student to worker
+
+
+
+//Process for sending requests from student
 router.post('/sendSupportRequest', urlEncodedParser, (req, res) =>
 {
     console.log(req.body);
@@ -17,20 +19,25 @@ router.post('/sendSupportRequest', urlEncodedParser, (req, res) =>
     let day = req.body.day;
     let month = req.body.month;
 
-    //TO-DO PREPARED STATEMENT!!!!
-    let sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) 
-    VALUES('${startTime}', '${endTime}', '2021-${month}-${day}', ${req.session.user_id});`;
+    //
+    let sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) VALUES(?, ?, '2021-?-?', ?);`;
 
-    console.log(sql);
-    db.query(sql);
+    console.log(sql); //DEBUG
+    
+    //Month and day come as strings (in between ' ' ) so they need to be parsed as int.
+    db.query(sql, [startTime, endTime, parseInt(month), parseInt(day), req.session.user_id]);
 
     res.redirect('/dashboard/student');
 });
 
-//Pulling the requests from the database
+
+
+
+//Pulling the requests from the database to view by the admin or student
 router.post('/requests', (req, res) =>
 {
     let sql;
+
     //If the user is of type 'Admin'
     if(req.session.user_type === 'A')
     {
@@ -38,10 +45,10 @@ router.post('/requests', (req, res) =>
     }
     else
     {
-        //TO-DO PREPARED STATEMENT!!!
-        sql = `SELECT * FROM requests WHERE requester_id=${req.session.user_id};`;
+        sql = `SELECT * FROM requests WHERE requester_id=?;`;
     }
-    let query = db.query(sql, (err, result) => {
+
+    db.query(sql, [req.session.user_id], (err, result) => {
         if(err) throw err;
         res.send(result);
     });
