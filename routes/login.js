@@ -3,7 +3,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const router = express.Router();
 const db = require('../private/database_connection');
-const session = require('express-session');
 
 const urlEncodedParser = bodyParser.urlencoded({extended: true});
 

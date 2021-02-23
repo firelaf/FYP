@@ -12,6 +12,8 @@ router.use('/login', login);
 router.use('/dashboard', dashboard);
 router.use('/database', db_model);
 
+router.post('/session/userType', (req, res) => res.send(req.session.user_type));
+
 router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
 });
