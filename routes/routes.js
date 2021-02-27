@@ -1,21 +1,21 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const router = express.Router();
-const db = require('../private/database_connection');
+const db = require("../private/database_connection");
 
 //Splitting the routing into smaller files
-const db_model = require('./database');
-const dashboard = require('./dashboard');
-const login = require('./login');
+const db_model = require("./database");
+const dashboard = require("./dashboard");
+const login = require("./login");
 
-router.use('/login', login);
-router.use('/dashboard', dashboard);
-router.use('/database', db_model);
+router.use("/login", login);
+router.use("/dashboard", dashboard);
+router.use("/database", db_model);
 
-router.post('/session/userType', (req, res) => res.send(req.session.user_type));
+router.post("/session/userType", (req, res) => res.send(req.session.user_type));
 
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "views", "index.html"));
 });
 
 module.exports = router;

@@ -1,28 +1,30 @@
 //Requires
-const path =  require('path');
-const fs =  require('fs');
-const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
-const db = require('./private/database_connection');
+const path = require("path");
+const fs = require("fs");
+const express = require("express");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const db = require("./private/database_connection");
 
-const routes = require('./routes/routes');
+const routes = require("./routes/routes");
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static(path.join(__dirname, "views")));
 
-const urlEncodedParser = bodyParser.urlencoded({extended: true});
+const urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
 app.use(cookieParser());
-app.use(session({
-  secret: "Secret",
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(
+  session({
+    secret: "Secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 //Routes
-app.use('/', routes);
+app.use("/", routes);
 
 //Ports and listening
 const PORT = process.env.port || 5000;

@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Student Dashboard</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="../css/index.css">
-    </head>
-    <body>
-        <h1>Student Dashboard</h1>
-        <h3>Request Support</h3>
-        <form action="/database/sendRequest" method="POST">
-            <label for="startTime">Start Time</label>
-            <select name="startTime" id="start-time-dropdown" class="time-dropdown">
-                <!-- Filled by dropdown.js -->
-            </select>
-            <label for="endTime">End Time</label>
-            <select name="endTime" id="end-time-drop" class="time-dropdown">
-                <!-- Filled by dropdown.js -->
-            </select>
-            <label for="dateDay">Date:</label>
-            <select name="day" id="day-dropdown">
-                <!-- Filled by dropdown.js -->
-            </select>
-            <select name="month" id="monthDrop">
-                <option value="01">Jan</option>
-                <option value="02">Feb</option>
-                <option value="03">Mar</option>
-                <option value="04">Apr</option>
-                <option value="05">May</option>
-                <option value="06">Jun</option>
-                <option value="07">Jul</option>
-                <option value="08">Aug</option>
-                <option value="09">Sep</option>
-                <option value="10">Oct</option>
-                <option value="11">Nov</option>
-                <option value="12">Dec</option>
-            </select>
-            <input type="submit" value="Request">
-        </form>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Student Dashboard</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+  </head>
+  <body>
+    <h1>Student Dashboard</h1>
+    <h3>Request Support</h3>
+    <form action="/database/sendRequest" method="POST">
+      <label for="startTime">Start Time</label>
+      <select name="startTime" id="start-time-dropdown" class="time-dropdown">
+        <!-- Filled by dropdown.js -->
+      </select>
+      <label for="endTime">End Time</label>
+      <select name="endTime" id="end-time-drop" class="time-dropdown">
+        <!-- Filled by dropdown.js -->
+      </select>
+      <label for="dateDay">Date:</label>
+      <select name="day" id="day-dropdown">
+        <!-- Filled by dropdown.js -->
+      </select>
+      <select name="month" id="monthDrop">
+        <option value="01">Jan</option>
+        <option value="02">Feb</option>
+        <option value="03">Mar</option>
+        <option value="04">Apr</option>
+        <option value="05">May</option>
+        <option value="06">Jun</option>
+        <option value="07">Jul</option>
+        <option value="08">Aug</option>
+        <option value="09">Sep</option>
+        <option value="10">Oct</option>
+        <option value="11">Nov</option>
+        <option value="12">Dec</option>
+      </select>
+      <input type="submit" value="Request" />
+    </form>
 
-        <table class="requests-table" style="width: 100%">
-            <tr><td>Start Time</td>
-            <td>End Time</td>
-            <td>Requested Date</td>
-            <td>Accepted by Worker</td></tr>
-            <!-- Filled by requests_table.js -->
-        </table>
+    <table class="requests-table" style="width: 100%">
+      <tr>
+        <td>Start Time</td>
+        <td>End Time</td>
+        <td>Requested Date</td>
+        <td>Accepted by Worker</td>
+      </tr>
+      <!-- Filled by requests_table.js -->
+    </table>
 
-        <a href="/login/logout">Log Out</a>
-        
-        <script src="../js/dropdown.js"></script>
-        <script src="../js/requests_table.js"></script>
-    </body>
+    <a href="/login/logout">Log Out</a>
+
+    <script src="../js/dropdown.js"></script>
+    <script src="../js/requests_table.js"></script>
+  </body>
 </html>
