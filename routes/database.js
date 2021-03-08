@@ -7,8 +7,12 @@ router = express.Router();
 const db = require("../private/database_connection");
 const urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
+const sorter = require("../private/sorting");
+
 //Process for sending requests from student
 router.post("/sendRequest", urlEncodedParser, (req, res) => {
+  //const dateTimeStart = new Date(2021, parseInt(req.body.month) - 1, parseInt(req.body.day), req.body.startTime);
+
   let startTime = req.body.startTime;
   let endTime = req.body.endTime;
   let day = req.body.day;
@@ -20,6 +24,7 @@ router.post("/sendRequest", urlEncodedParser, (req, res) => {
   if (req.session.user_type === "S") {
     sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) VALUES(?, ?, '2021-?-?', ?);`;
     redirectRoute = "/dashboard/student";
+    sorter(startTime, endTime, day, month);
   } else if (req.session.user_type === "W") {
     sql = `INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id) VALUES(?, ?, '2021-?-?', ?);`;
     redirectRoute = "/dashboard/worker";
@@ -28,11 +33,11 @@ router.post("/sendRequest", urlEncodedParser, (req, res) => {
   //Month and day come as strings (in between ' ' ) so they need to be parsed as int.
   if (sql) {
     db.query(sql, [
-      startTime,
-      endTime,
+      startTime, //Time where the session/unavailability window beings
+      endTime, //Time when it ends
       parseInt(month),
       parseInt(day),
-      req.session.user_id,
+      req.session.user_id, //User ID session cookie
     ]);
   }
 

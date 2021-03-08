@@ -25,6 +25,7 @@ function getRequests(uType) {
       });
     });
 }
+
 //TODO - REMOVE THE REPEATING CODE
 function getAvailability(uType) {
   let table = document.querySelector(".availability-table");
@@ -39,6 +40,10 @@ function getAvailability(uType) {
         let tableContents = `<td>${item.unavailableFrom}</td>
                                  <td>${item.unavailableTo}</td>
                                  <td>${dateParsed[0]}</td>`;
+        if (uType === "A") {
+          tableContents += `<td>${item.worker_id}</td>`;
+        }
+
         table.innerHTML += tableContents;
       });
     });
