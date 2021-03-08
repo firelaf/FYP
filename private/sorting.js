@@ -1,4 +1,5 @@
 const db = require("./database_connection");
+const srtToIntTime = require("./strToIntTime");
 
 module.exports = (startTime, endTime, day, month) => {
   function checkAvailability(workerID) {
