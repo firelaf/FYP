@@ -1,61 +1,48 @@
 const db = require("./database_connection");
-const srtToIntTime = require("./strToIntTime");
+const getRandInt = require("./getRandInt");
 
-module.exports = (startTime, endTime, day, month) => {
-  function checkAvailability(workerID) {
+module.exports = (shift) => {
+  db.query(
+    "SELECT * FROM availability WHERE NOT (unavailableTo <= ? OR unavailableFrom >= ?);",
+    [shift.startTime, shift.endTime],
+    (err, result) => {
+      let unavailableWorkers = [];
+      result.forEach((item) => {
+        if (!unavailableWorkers.includes(item.worker_id)) {
+          unavailableWorkers.push(item.worker_id);
+        }
+      });
+      checkWorkers(unavailableWorkers);
+      console.log(`${unavailableWorkers} are unavailable`);
+    }
+  );
+
+  function checkWorkers(unavailableWorkers) {
     db.query(
-      "SELECT * FROM availability WHERE worker_id=?",
-      [workerID],
-      (err, result) => {
-        console.log(result);
-      }
-    );
-  }
-
-  function checkWorkers(numOfWorkers, workerIDs) {
-    let availability = {};
-
-    workerIDs.forEach((item, index) => {
-      availability[workerIDs[index]] = false;
-      checkAvailability(workerIDs[index]);
-    });
-
-    console.log(availability);
-  }
-
-  function getWorkers() {
-    db.query(
-      "SELECT user_id FROM login WHERE user_type=?",
+      "SELECT user_id FROM login WHERE user_type=?;",
       ["W"],
       (err, result) => {
-        let numOfWorkers = 0;
-        let workerIDs = [];
+        let availableWorkers = [];
 
-        result.forEach((item, index) => {
-          numOfWorkers++;
-          workerIDs[index] = result[index].user_id;
+        result.forEach((item) => {
+          if (!unavailableWorkers.includes(item.user_id)) {
+            availableWorkers.push(item.user_id);
+          }
         });
 
-        checkWorkers(numOfWorkers, workerIDs);
+        console.log(`${availableWorkers} are available`);
+
+        assignShift(availableWorkers);
       }
     );
   }
 
-  getWorkers();
-
-  // function getWorkerIDs(numOfWorkers) {
-  //   let sql = "SELECT *";
-  //   db.query;
-  // }
-
-  // function getNumWorkers() {
-  //   let sql = "SELECT COUNT(*) FROM login WHERE user_type=?;";
-
-  //   db.query(sql, ["W"], (err, result) => {
-  //     numOfWorkers = result[0]["COUNT(*)"];
-  //     getWorkerIDs(numOfWorkers);
-  //   });
-  // }
-
-  // getNumWorkers();
+  function assignShift(availableWorkers) {
+    console.log(availableWorkers[getRandInt(availableWorkers.length)]);
+    console.log(shift.session_id);
+    db.query("UPDATE requests SET assignedTo_id = ? WHERE session_id = ?;", [
+      availableWorkers[getRandInt(availableWorkers.length)],
+      shift.session_id,
+    ]);
+  }
 };

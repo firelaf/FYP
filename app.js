@@ -5,7 +5,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-//const db = require("./private/database_connection");
 
 const routes = require("./routes/routes");
 const app = express();

@@ -22,6 +22,7 @@ function getRequests(uType) {
         }
         //Make the changes to the HTML
         table.innerHTML += tableContents;
+        console.log(tableContents);
       });
     });
 }
@@ -53,9 +54,8 @@ function getAvailability(uType) {
 async function getUserType() {
   let userType = await fetch("/session/userType", { method: "POST" });
   userType.text().then((uType) => {
-    if (uType === "A" || uType === "S") {
-      getRequests(uType);
-    }
+    getRequests(uType);
+
     if (uType === "A" || uType === "W") {
       getAvailability(uType);
     }

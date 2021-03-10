@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const path = require("path");
 const bodyParser = require("body-parser");
+const { uuid } = require("uuidv4");
 router = express.Router();
 
 const db = require("../private/database_connection");
@@ -11,20 +12,22 @@ const sorter = require("../private/sorting");
 
 //Process for sending requests from student
 router.post("/sendRequest", urlEncodedParser, (req, res) => {
-  //const dateTimeStart = new Date(2021, parseInt(req.body.month) - 1, parseInt(req.body.day), req.body.startTime);
-
-  let startTime = req.body.startTime;
-  let endTime = req.body.endTime;
-  let day = req.body.day;
-  let month = req.body.month;
+  const shift = {
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
+    day: req.body.day,
+    month: req.body.month,
+    requester_id: req.session.user_id,
+    session_id: uuid(),
+  };
 
   let sql;
   let redirectRoute;
 
   if (req.session.user_type === "S") {
-    sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id) VALUES(?, ?, '2021-?-?', ?);`;
+    sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id) VALUES(?, ?, '2021-?-?', ?, ?);`;
     redirectRoute = "/dashboard/student";
-    sorter(startTime, endTime, day, month);
+    sorter(shift);
   } else if (req.session.user_type === "W") {
     sql = `INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id) VALUES(?, ?, '2021-?-?', ?);`;
     redirectRoute = "/dashboard/worker";
@@ -33,11 +36,12 @@ router.post("/sendRequest", urlEncodedParser, (req, res) => {
   //Month and day come as strings (in between ' ' ) so they need to be parsed as int.
   if (sql) {
     db.query(sql, [
-      startTime, //Time where the session/unavailability window beings
-      endTime, //Time when it ends
-      parseInt(month),
-      parseInt(day),
-      req.session.user_id, //User ID session cookie
+      shift.startTime, //Time where the session/unavailability window beings
+      shift.endTime, //Time when it ends
+      parseInt(shift.month),
+      parseInt(shift.day),
+      shift.requester_id, //User ID session cookie
+      shift.session_id,
     ]);
   }
 
@@ -53,11 +57,15 @@ router.post("/requests", (req, res) => {
     sql = "SELECT * FROM requests;";
   } else if (req.session.user_type === "S") {
     sql = "SELECT * FROM requests WHERE requester_id=?;";
+  } else if (req.session.user_type === "W") {
+    sql = "SELECT * FROM requests WHERE assignedTo_id=?";
   }
 
   if (sql) {
     db.query(sql, [req.session.user_id], (err, result) => {
       if (err) throw err;
+      console.log(result);
+      console.log(req.session.user_type, req.session.user_id);
       res.send(result);
     });
   }
