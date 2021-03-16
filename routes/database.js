@@ -1,17 +1,15 @@
 const express = require("express");
 const mysql = require("mysql");
 const path = require("path");
-const bodyParser = require("body-parser");
 const { uuid } = require("uuidv4");
 router = express.Router();
 
 const db = require("../private/database_connection");
-const urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
 const sorter = require("../private/sorting");
 
 //Process for sending requests from student
-router.post("/sendRequest", urlEncodedParser, (req, res) => {
+router.post("/sendRequest", (req, res) => {
   const shift = {
     startTime: req.body.startTime,
     endTime: req.body.endTime,

@@ -1,10 +1,7 @@
 const express = require("express");
 const path = require("path");
-const bodyParser = require("body-parser");
 const router = express.Router();
 const db = require("../private/database_connection");
-
-const urlEncodedParser = bodyParser.urlencoded({ extended: true });
 
 router.get("/", (req, res) => {
   //Checks if the user is logged in (isAuth Session Cookie)
@@ -25,7 +22,7 @@ router.get("/", (req, res) => {
   }
 });
 
-router.post("/process", urlEncodedParser, (req, res) => {
+router.post("/process", (req, res) => {
   let email = req.body.loginEmail;
   let pass = req.body.loginPass;
 

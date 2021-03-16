@@ -1,8 +1,6 @@
 //Requires
 const path = require("path");
-const fs = require("fs");
 const express = require("express");
-const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
@@ -11,7 +9,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "views")));
 
-const urlEncodedParser = bodyParser.urlencoded({ extended: true });
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 app.use(
