@@ -44,14 +44,26 @@ module.exports = (shift) => {
       }
     );
   }
+
   /* Third, select a random available worker to be assigned by generating
   a random index of the array.
   */
 
   function assignShift(availableWorkers) {
-    db.query("UPDATE requests SET assignedTo_id = ? WHERE session_id = ?;", [
-      availableWorkers[getRandInt(availableWorkers.length)],
-      shift.session_id,
-    ]);
+    const chosenWorker = availableWorkers[getRandInt(availableWorkers.length)];
+    db.query(
+      "UPDATE requests SET assignedTo_id = ? WHERE session_id = ?;",
+      [chosenWorker, shift.session_id],
+      () => {
+        setUnavailable(chosenWorker);
+      }
+    );
+  }
+
+  function setUnavailable(chosenWorker) {
+    db.query(
+      "INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id) VALUES(?, ?, '2021-?-?', ?);",
+      [shift.startTime, shift.endTime, shift.month, shift.day, chosenWorker]
+    );
   }
 };

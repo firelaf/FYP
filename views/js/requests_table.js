@@ -37,15 +37,17 @@ function getAvailability(uType) {
     })
     .then((resData) => {
       resData.forEach((item) => {
-        let dateParsed = item.availableDate.split("T");
-        let tableContents = `<td>${item.unavailableFrom}</td>
-                                 <td>${item.unavailableTo}</td>
-                                 <td>${dateParsed[0]}</td>`;
-        if (uType === "A") {
-          tableContents += `<td>${item.worker_id}</td>`;
-        }
+        if (item.setByWorker) {
+          let dateParsed = item.availableDate.split("T");
+          let tableContents = `<td>${item.unavailableFrom}</td>
+                                   <td>${item.unavailableTo}</td>
+                                   <td>${dateParsed[0]}</td>`;
+          if (uType === "A") {
+            tableContents += `<td>${item.worker_id}</td>`;
+          }
 
-        table.innerHTML += tableContents;
+          table.innerHTML += tableContents;
+        }
       });
     });
 }

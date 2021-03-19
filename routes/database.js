@@ -1,7 +1,7 @@
 const express = require("express");
-const mysql = require("mysql");
-const path = require("path");
-const { uuid } = require("uuidv4");
+// const mysql = require("mysql");
+// const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 router = express.Router();
 
 const db = require("../private/database_connection");
@@ -13,10 +13,10 @@ router.post("/sendRequest", (req, res) => {
   const shift = {
     startTime: req.body.startTime,
     endTime: req.body.endTime,
-    day: req.body.day,
-    month: req.body.month,
+    day: +req.body.day,
+    month: +req.body.month,
     requester_id: req.session.user_id,
-    session_id: uuid(),
+    session_id: uuidv4(),
   };
 
   let sql;
@@ -27,7 +27,7 @@ router.post("/sendRequest", (req, res) => {
     redirectRoute = "/dashboard/student";
     sorter(shift);
   } else if (req.session.user_type === "W") {
-    sql = `INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id) VALUES(?, ?, '2021-?-?', ?);`;
+    sql = `INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, setByWorker) VALUES(?, ?, '2021-?-?', ?, TRUE);`;
     redirectRoute = "/dashboard/worker";
   }
 
@@ -36,8 +36,8 @@ router.post("/sendRequest", (req, res) => {
     db.query(sql, [
       shift.startTime, //Time where the session/unavailability window beings
       shift.endTime, //Time when it ends
-      parseInt(shift.month),
-      parseInt(shift.day),
+      shift.month,
+      shift.day,
       shift.requester_id, //User ID session cookie
       shift.session_id,
     ]);
@@ -62,8 +62,7 @@ router.post("/requests", (req, res) => {
   if (sql) {
     db.query(sql, [req.session.user_id], (err, result) => {
       if (err) throw err;
-      console.log(result);
-      console.log(req.session.user_type, req.session.user_id);
+
       res.send(result);
     });
   }
