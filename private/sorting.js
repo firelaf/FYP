@@ -7,8 +7,8 @@ module.exports = (shift) => {
   workers into an array (unavailableWorkers).
   */
   db.query(
-    "SELECT * FROM availability WHERE NOT (unavailableTo <= ? OR unavailableFrom >= ?);",
-    [shift.startTime, shift.endTime],
+    "SELECT * FROM availability WHERE NOT (unavailableTo <= ? OR unavailableFrom >= ?) AND availableDate = '2021-?-?';",
+    [shift.startTime, shift.endTime, shift.month, shift.day],
     (err, result) => {
       let unavailableWorkers = [];
 

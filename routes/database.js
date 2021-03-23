@@ -1,15 +1,16 @@
 const express = require("express");
-// const mysql = require("mysql");
-// const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-router = express.Router();
-
+const router = express.Router();
 const db = require("../private/database_connection");
-
 const sorter = require("../private/sorting");
+const validateDateTime = require("../private/validateDateTime");
+const addSessionToDB = require("../private/addSessionToDB");
 
 //Process for sending requests from student
 router.post("/sendRequest", (req, res) => {
+  let userType = req.session.user_type;
+
+  //Shift is a collective term for both help requests from the students and availability timeframes for the workers
   const shift = {
     startTime: req.body.startTime,
     endTime: req.body.endTime,
@@ -19,43 +20,30 @@ router.post("/sendRequest", (req, res) => {
     session_id: uuidv4(),
   };
 
-  let sql;
-  let redirectRoute;
+  if (validateDateTime(shift)) {
+    //This function call fires the chain of queries that check if the timeframe the user is requesting intersects with
+    //a timeframe they've already requested
+    addSessionToDB(userType, shift, res);
 
-  if (req.session.user_type === "S") {
-    sql = `INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id) VALUES(?, ?, '2021-?-?', ?, ?);`;
-    redirectRoute = "/dashboard/student";
-    sorter(shift);
-  } else if (req.session.user_type === "W") {
-    sql = `INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, setByWorker) VALUES(?, ?, '2021-?-?', ?, TRUE);`;
-    redirectRoute = "/dashboard/worker";
+    if (userType === "S") {
+      sorter(shift);
+    }
+  } else {
+    res.send("Invalid date-time");
   }
-
-  //Month and day come as strings (in between ' ' ) so they need to be parsed as int.
-  if (sql) {
-    db.query(sql, [
-      shift.startTime, //Time where the session/unavailability window beings
-      shift.endTime, //Time when it ends
-      shift.month,
-      shift.day,
-      shift.requester_id, //User ID session cookie
-      shift.session_id,
-    ]);
-  }
-
-  res.redirect(redirectRoute);
 });
 
 //Pulling the requests from the database to view by the admin or student
 router.post("/requests", (req, res) => {
   let sql;
+  let userType = req.session.user_type;
 
   //If the user is of type 'Admin'
-  if (req.session.user_type === "A") {
+  if (userType === "A") {
     sql = "SELECT * FROM requests;";
-  } else if (req.session.user_type === "S") {
+  } else if (userType === "S") {
     sql = "SELECT * FROM requests WHERE requester_id=?;";
-  } else if (req.session.user_type === "W") {
+  } else if (userType === "W") {
     sql = "SELECT * FROM requests WHERE assignedTo_id=?";
   }
 
@@ -70,16 +58,18 @@ router.post("/requests", (req, res) => {
 
 router.post("/availability", (req, res) => {
   let sql;
+  let userType = req.session.user_type;
 
-  if (req.session.user_type === "A") {
+  if (userType === "A") {
     sql = "SELECT * FROM availability;";
-  } else if (req.session.user_type === "W") {
+  } else if (userType === "W") {
     sql = "SELECT * FROM availability WHERE worker_id=?;";
   }
 
   if (sql) {
     db.query(sql, [req.session.user_id], (err, result) => {
       if (err) throw err;
+      console.log(result);
       res.send(result);
     });
   }

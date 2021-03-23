@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const router = express.Router();
-const db = require("../private/database_connection");
+//const db = require("../private/database_connection");
 
 //Splitting the routing into smaller files
 const db_model = require("./database");

@@ -10,10 +10,10 @@ function getRequests(uType) {
     .then((resData) => {
       //For each entry entry received from the server, arrange the data in the table
       resData.forEach((item) => {
-        let requestDateParsed = item.requestDate.split("T");
+        let dateObject = new Date(item.requestDate);
         let tableContents = `<td>${item.startTime}</td>
                                  <td>${item.endTime}</td>
-                                 <td>${requestDateParsed[0]}</td>
+                                 <td>${dateObject.getDate()}/${dateObject.getMonth()}/${dateObject.getFullYear()}</td>
                                  <td>${item.assignedTo_id}</td>`;
 
         //If the request was made by an Admin, show the ID of the student who made the request
@@ -22,7 +22,6 @@ function getRequests(uType) {
         }
         //Make the changes to the HTML
         table.innerHTML += tableContents;
-        console.log(tableContents);
       });
     });
 }
@@ -38,10 +37,11 @@ function getAvailability(uType) {
     .then((resData) => {
       resData.forEach((item) => {
         if (item.setByWorker) {
-          let dateParsed = item.availableDate.split("T");
+          let dateObject = new Date(item.availableDate);
+
           let tableContents = `<td>${item.unavailableFrom}</td>
                                    <td>${item.unavailableTo}</td>
-                                   <td>${dateParsed[0]}</td>`;
+                                   <td>${dateObject.getDate()}/${dateObject.getMonth()}/${dateObject.getFullYear()}</td>`;
           if (uType === "A") {
             tableContents += `<td>${item.worker_id}</td>`;
           }
