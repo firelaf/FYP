@@ -11,6 +11,7 @@
   <body>
     <h1>Student Dashboard</h1>
     <h3>Request Support</h3>
+
     <form action="/database/sendRequest" method="POST">
       <label for="startTime">Start Time</label>
       <select name="startTime" id="start-time-dropdown" class="time-dropdown">
@@ -38,6 +39,21 @@
         <option value="11">Nov</option>
         <option value="12">Dec</option>
       </select>
+
+      <br />
+      <br />
+
+      <textarea
+        name="details"
+        id="details"
+        cols="53"
+        rows="10"
+        maxlength="1000"
+        placeholder="Describe what you need help with..."
+      ></textarea>
+
+      <br />
+
       <input type="submit" value="Request" />
     </form>
 
@@ -47,6 +63,7 @@
         <td>End Time</td>
         <td>Requested Date</td>
         <td>Assigned to Worker</td>
+        <td>Details</td>
       </tr>
       <!-- Filled by requests_table.js -->
     </table>

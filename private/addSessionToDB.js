@@ -33,7 +33,7 @@ function addToDB(userType, shift, httpRes) {
   let redirectRoute;
   if (userType === "S") {
     sql =
-      "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id) VALUES(?, ?, '2021-?-?', ?, ?);";
+      "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id, details) VALUES(?, ?, '2021-?-?', ?, ?, ?);";
     redirectRoute = "/dashboard/student";
   } else if (userType === "W") {
     sql =
@@ -51,6 +51,7 @@ function addToDB(userType, shift, httpRes) {
         shift.day,
         shift.requester_id, //User ID session cookie
         shift.session_id,
+        shift.details,
       ],
       (err, result) => {
         httpRes.redirect(redirectRoute);

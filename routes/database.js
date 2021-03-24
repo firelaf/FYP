@@ -16,6 +16,7 @@ router.post("/sendRequest", (req, res) => {
     endTime: req.body.endTime,
     day: +req.body.day,
     month: +req.body.month,
+    details: req.body.details,
     requester_id: req.session.user_id,
     session_id: uuidv4(),
   };
@@ -61,15 +62,15 @@ router.post("/availability", (req, res) => {
   let userType = req.session.user_type;
 
   if (userType === "A") {
-    sql = "SELECT * FROM availability;";
+    sql = "SELECT * FROM availability WHERE setByWorker = TRUE;";
   } else if (userType === "W") {
-    sql = "SELECT * FROM availability WHERE worker_id=?;";
+    sql =
+      "SELECT * FROM availability WHERE worker_id=? AND setByWorker = TRUE;";
   }
 
   if (sql) {
     db.query(sql, [req.session.user_id], (err, result) => {
       if (err) throw err;
-      console.log(result);
       res.send(result);
     });
   }
