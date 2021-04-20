@@ -8,7 +8,18 @@ const addSessionToDB = require("../private/addSessionToDB");
 
 //Process for sending requests from student
 router.post("/sendRequest", (req, res) => {
+  //console.log(req.body["practical-type"]);
   let userType = req.session.user_type;
+
+  let practicalSupport = false;
+  let noteTakingSupport = false;
+
+  if (req.body["practical-type"]) {
+    practicalSupport = true;
+  }
+  if (req.body["note-taking-type"]) {
+    noteTakingSupport = true;
+  }
 
   //Shift is a collective term for both help requests from the students and availability timeframes for the workers
   const shift = {
@@ -17,6 +28,8 @@ router.post("/sendRequest", (req, res) => {
     day: +req.body.day,
     month: +req.body.month,
     details: req.body.details,
+    practicalSupport: practicalSupport,
+    noteTakingSupport: noteTakingSupport,
     requester_id: req.session.user_id,
     session_id: uuidv4(),
   };

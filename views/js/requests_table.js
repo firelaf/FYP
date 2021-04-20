@@ -12,13 +12,23 @@ function getRequests(uType) {
       resData.forEach((item) => {
         let dateObject = new Date(item.requestDate);
 
+        let shiftType;
+        if (item.practicalType && item.noteTakingType) {
+          shiftType = "Practical and Note-Taking Support";
+        } else if (item.practicalType && !item.noteTakingType) {
+          shiftType = "Practical Support";
+        } else if (!item.practicalType && item.noteTakingType) {
+          shiftType = "Note-Taking Support";
+        }
+
         let tableContents = `<td>${item.startTime}</td>
-                                 <td>${item.endTime}</td>
-                                 <td>${dateObject.getDate()}/${
+        <td>${item.endTime}</td>
+        <td>${dateObject.getDate()}/${
           dateObject.getMonth() + 1
         }/${dateObject.getFullYear()}</td>
-                                 <td>${item.assignedTo_id}</td>
-                                 <td>${item.details}</td>`;
+        <td>${item.assignedTo_id}</td>
+        <td>${item.details}</td>
+        <td>${shiftType}`;
 
         //If the request was made by an Admin, show the ID of the student who made the request
         if (uType === "A") {
