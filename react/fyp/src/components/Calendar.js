@@ -28,7 +28,7 @@ const Calendar = () => {
           top: "-266vw",
         }}
       >
-        <Event></Event>
+        <Event />
       </div>
     </div>
   );

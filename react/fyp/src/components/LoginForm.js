@@ -1,4 +1,5 @@
 import React from "react";
+// import CstAppBar from "./CstAppBar";
 import { useState, useRef } from "react";
 import { TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -109,73 +110,76 @@ const LoginForm = () => {
   const textboxStyles = useStyles();
 
   return (
-    <section
-      style={{
-        display: "flex",
-        flexDirection: "Column",
-        alignItems: "center",
-      }}
-    >
-      <form
-        ref={formRef}
-        id="login-form"
-        aria-label="Login Form"
+    <>
+      {/* <CstAppBar label="Log In" menuIcon={false} /> */}
+      <section
         style={{
           display: "flex",
+          flexDirection: "Column",
           alignItems: "center",
-          flexDirection: "column",
-          width: "90vw",
-          marginTop: "30vh",
-          maxWidth: "300px",
         }}
       >
-        <TextField
-          label="Email"
-          variant="outlined"
-          className={textboxStyles.root}
-          autoFocus={true}
-          fullWidth={true}
-          inputProps={{
-            type: "email",
-            form: "login-form",
-            name: "loginEmail",
-          }}
-          onChange={changeEmail}
-          onBlur={validateInput}
-          error={!validationStatus.validEmail}
-          helperText={validationStatus.emailError}
-          aria-label="Email"
-        />
-        <TextField
-          label="Passoword"
-          variant="outlined"
-          inputProps={{
-            type: "password",
-            form: "loginForm",
-            name: "loginPass",
-          }}
-          fullWidth={true}
-          onChange={changePass}
-          onBlur={validateInput}
-          error={!validationStatus.validPass}
-          helperText={validationStatus.passError}
-          aria-label="Passoword"
-          className={textboxStyles.root}
-        />
-
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          size="large"
-          color="secondary"
+        <form
+          ref={formRef}
+          id="login-form"
+          aria-label="Login Form"
           style={{
-            alignSelf: "flex-end",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            width: "90vw",
+            marginTop: "30vh",
+            maxWidth: "300px",
           }}
         >
-          Log In
-        </Button>
-      </form>
-    </section>
+          <TextField
+            label="Email"
+            variant="outlined"
+            className={textboxStyles.root}
+            autoFocus={true}
+            fullWidth={true}
+            inputProps={{
+              type: "email",
+              form: "login-form",
+              name: "loginEmail",
+            }}
+            onChange={changeEmail}
+            onBlur={validateInput}
+            error={!validationStatus.validEmail}
+            helperText={validationStatus.emailError}
+            aria-label="Email"
+          />
+          <TextField
+            label="Passoword"
+            variant="outlined"
+            inputProps={{
+              type: "password",
+              form: "loginForm",
+              name: "loginPass",
+            }}
+            fullWidth={true}
+            onChange={changePass}
+            onBlur={validateInput}
+            error={!validationStatus.validPass}
+            helperText={validationStatus.passError}
+            aria-label="Passoword"
+            className={textboxStyles.root}
+          />
+
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            size="large"
+            color="secondary"
+            style={{
+              alignSelf: "flex-end",
+            }}
+          >
+            Log In
+          </Button>
+        </form>
+      </section>
+    </>
   );
 };
 

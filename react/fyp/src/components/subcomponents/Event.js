@@ -25,7 +25,7 @@ const Event = () => {
               }}
             >
               <Avatar
-                variant="circle"
+                variant="circular"
                 style={{
                   width: "1.3em",
                   height: "1.3em",
