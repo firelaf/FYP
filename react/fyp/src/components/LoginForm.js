@@ -1,6 +1,6 @@
 import React from "react";
 // import CstAppBar from "./CstAppBar";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
@@ -13,7 +13,11 @@ const LoginForm = () => {
     pass: "",
   });
 
-  const formRef = useRef();
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  }
 
   function handleSubmit() {
     const formData = {
@@ -28,15 +32,21 @@ const LoginForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       })
         .then((response) => {
-          console.log(response.headers.get("session-id"));
-          if (response.status === 202) return response.text();
+          console.log(response.status);
+          if (response.status === 202)
+            return { response: response.json(), status: response.status };
+          else return response.text();
         })
         .then((response) => {
-          console.log(response);
-          if (response === "W") history.push("/dashboard/worker/schedule");
+          // localStorage.setItem("userType", response.userType);
+          // localStorage.setItem("sessionID", response.sessionID);
+          // console.log(response.status);
+          if (response.status === 202) history.push("/dashboard/schedule");
+          else console.log(response);
         });
     }
   }
@@ -111,7 +121,6 @@ const LoginForm = () => {
 
   return (
     <>
-      {/* <CstAppBar label="Log In" menuIcon={false} /> */}
       <section
         style={{
           display: "flex",
@@ -120,7 +129,6 @@ const LoginForm = () => {
         }}
       >
         <form
-          ref={formRef}
           id="login-form"
           aria-label="Login Form"
           style={{
@@ -160,6 +168,9 @@ const LoginForm = () => {
             fullWidth={true}
             onChange={changePass}
             onBlur={validateInput}
+            onKeyPress={(event) => {
+              handleKeyPress(event);
+            }}
             error={!validationStatus.validPass}
             helperText={validationStatus.passError}
             aria-label="Passoword"

@@ -37,7 +37,7 @@ router.post("/process", (req, res) => {
 
     //Checks if there is a result from the query
     if (!result[0]) {
-      res.status(404).send("No match");
+      res.status(403).send("Your details are incorrect");
     } else {
       //If there is one, check the password
       if (pass === result[0].pass) {
@@ -47,10 +47,13 @@ router.post("/process", (req, res) => {
         req.session.isAuth = true;
         req.session.user_type = result[0].user_type;
 
-        res.status(202).send(req.session.user_type);
-        //userRedirect(req.session.user_type, res);
+        res.status(202).send({
+          userType: req.session.user_type,
+          sessionID: req.session.id,
+        });
+        console.log(req.session.id);
       } else {
-        res.status(404).send("Wrong Passoword");
+        res.status(403).send("Your details are incorrect");
       }
     }
   });
@@ -61,7 +64,7 @@ router.get("/logout", (req, res) => {
   req.session.isAuth = false;
   req.session.user_id = null;
   req.session.user_type = null;
-  res.redirect("/");
+  req.session.destroy();
 });
 
 router.get("/isAuth", (req, res) => {

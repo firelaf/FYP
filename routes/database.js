@@ -34,17 +34,21 @@ router.post("/sendRequest", (req, res) => {
     session_id: uuidv4(),
   };
 
-  if (validateDateTime(shift)) {
-    //This function call fires the chain of queries that check if the timeframe the user is requesting intersects with
-    //a timeframe they've already requested
-    addSessionToDB(userType, shift, res);
+  console.log(req.body);
 
-    if (userType === "S") {
-      sorter(shift);
+  if (req.session.isAuth) {
+    if (validateDateTime(shift)) {
+      //This function call fires the chain of queries that check if the timeframe the user is requesting intersects with
+      //a timeframe they've already requested
+      addSessionToDB(userType, shift, res);
+
+      if (userType === "S") {
+        sorter(shift);
+      }
+    } else {
+      res.status(403).send("Invalid date-time");
     }
-  } else {
-    res.send("Invalid date-time");
-  }
+  } else res.status(404).send("You have not logged in!");
 });
 
 //Pulling the requests from the database to view by the admin or student
@@ -68,24 +72,34 @@ router.post("/requests", (req, res) => {
       res.send(result);
     });
   }
+  if (!req.session.isAuth) {
+    res.status(403).send("You have not logged in!");
+  }
 });
 
 router.post("/availability", (req, res) => {
-  let sql;
   let userType = req.session.user_type;
 
-  if (userType === "A") {
-    sql = "SELECT * FROM availability WHERE setByWorker = TRUE;";
-  } else if (userType === "W") {
-    sql =
-      "SELECT * FROM availability WHERE worker_id=? AND setByWorker = TRUE;";
+  function sendResults(sql) {
+    if (sql) {
+      db.query(sql, [req.session.user_id], (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      });
+    }
   }
 
-  if (sql) {
-    db.query(sql, [req.session.user_id], (err, result) => {
-      if (err) throw err;
-      res.send(result);
-    });
+  switch (userType) {
+    case "A":
+      sendResults("SELECT * FROM availability WHERE setByWorker = TRUE;");
+      break;
+    case "W":
+      sendResults(
+        "SELECT * FROM availability WHERE worker_id=? AND setByWorker = TRUE;"
+      );
+      break;
+    default:
+      res.status(403).send("You do not have access!");
   }
 });
 

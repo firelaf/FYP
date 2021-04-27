@@ -18,15 +18,17 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 
 app.use(cookieParser());
 app.use(
   session({
-    secret: "Secret",
+    secret: "ShhSuperSecretDontTellAnyone",
     resave: false,
     saveUninitialized: false,
+    cookie: { maxAge: 43200000 }, //12 hours
   })
 );
 
