@@ -12,11 +12,11 @@ const useStyles = makeStyles({
   },
 });
 
-const Cell = (props) => {
+const Cell = React.forwardRef((props, ref) => {
   const classes = useStyles();
   return (
     <>
-      <div className={classes.root}>
+      <div className={classes.root} ref={ref}>
         <div>{props.label}</div>
       </div>
       <div className={classes.root}></div>
@@ -24,7 +24,7 @@ const Cell = (props) => {
       <div className={classes.root}></div>
     </>
   );
-};
+});
 
 Cell.defaultProps = {
   label: "",
