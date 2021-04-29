@@ -1,12 +1,10 @@
-import React, { useRef, useReducer, useState } from "react";
+import React from "react";
 import { Paper, IconButton, Typography } from "@material-ui/core";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 const DateNav = (props) => {
-  const [date, changeDate] = useState(new Date());
-
-  // const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  //const [date, changeDate] = useState(new Date());
 
   return (
     <div>

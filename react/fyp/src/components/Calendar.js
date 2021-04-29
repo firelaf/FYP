@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useReducer } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Cell from "./subcomponents/Cell";
 import Event from "./subcomponents/Event";
 import DateNav from "./DateNav";
@@ -26,9 +26,7 @@ const Calendar = () => {
   const [lineOffset, changeOffset] = useState("0");
   const [displayLine, toggleLine] = useState("inline");
   const [calendarDate, changeDate] = useState(new Date());
-  const [displayEvent, setEvent] = useState([]);
-
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  let [renderEvents, changeEvents] = useState([]);
 
   //This happens only once when the page is loaded
   useEffect(() => {
@@ -47,37 +45,41 @@ const Calendar = () => {
         DT.getMinutes()
       )
     );
-    setEvent(
-      shifts.map((item) => {
-        const startTimeParsed = item.startTime.split(":");
-        const endTimeParsed = item.endTime.split(":");
-        return (
-          <Event
-            key={item.session_id}
-            startTime={item.startTime}
-            endTime={item.endTime}
-            date={new Date(item.date)}
-            offset={calculatePosition(
-              firstCellPos,
-              lastCellPos,
-              +startTimeParsed[0],
-              +startTimeParsed[1]
-            )}
-            bottom={calculatePosition(
-              firstCellPos,
-              lastCellPos,
-              +endTimeParsed[0],
-              +endTimeParsed[1]
-            )}
-          />
-        );
-      })
-    );
+    changeEvents(updateShifts(firstCellPos, lastCellPos));
     //ESLINT gives a warning in case of infinite loops.
     //I've chosen to ignore it since no infinite loops can
     //occur when only calling useEffect() once (empty array []).
     //eslint-disable-next-line
   }, []);
+
+  function updateShifts(firstCellPos, lastCellPos) {
+    console.log("shfits updated");
+    return shifts.map((item) => {
+      const startTimeParsed = item.startTime.split(":");
+      const endTimeParsed = item.endTime.split(":");
+      return (
+        <Event
+          key={item.session_id}
+          startTime={item.startTime}
+          endTime={item.endTime}
+          date={new Date(item.date)}
+          calendarDate={calendarDate}
+          offset={calculatePosition(
+            firstCellPos,
+            lastCellPos,
+            +startTimeParsed[0],
+            +startTimeParsed[1]
+          )}
+          bottom={calculatePosition(
+            firstCellPos,
+            lastCellPos,
+            +endTimeParsed[0],
+            +endTimeParsed[1]
+          )}
+        />
+      );
+    });
+  }
 
   //Recursive function which updates the position of the red time indicator
   //every minute
@@ -99,7 +101,7 @@ const Calendar = () => {
         )
       );
       updateLine(firstCellPos, lastCellPos);
-      //console.log(DT);
+      console.log("updated line");
     }, 60000);
   }
 
@@ -149,7 +151,7 @@ const Calendar = () => {
       <Cell label="19:00" />
       <Cell label="20:00" />
       <div id="placeholder" ref={lastCell} />
-      {displayEvent}
+      {renderEvents}
     </div>
   );
 };

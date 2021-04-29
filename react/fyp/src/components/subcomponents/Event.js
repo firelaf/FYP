@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {
@@ -11,11 +11,18 @@ import FiberSmartRecordIcon from "@material-ui/icons/FiberSmartRecord";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const Event = (props) => {
-  console.log(props.date, props.calendarDate);
+  useEffect(() => {
+    console.log(props.date, props.calendarDate);
+  });
+  function displayControl(eventDate, calDate) {
+    if (eventDate.getDate() === calDate.getDate()) return "flex";
+    else return "none";
+  }
+
   return (
     <div
       style={{
-        display: "flex",
+        display: `${displayControl(props.date, props.calendarDate)}`,
         justifyContent: "flex-end",
         width: "70vw",
         marginRight: "5vw",
