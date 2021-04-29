@@ -10,7 +10,7 @@ const Schedule = () => {
   let [userType, updateUserType] = useState("unknown");
 
   useEffect(() => {
-    console.log("updated");
+    // console.log("updated");
   }, [userType]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const Schedule = () => {
         return response.text();
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         // eslint-disable-next-line
         updateUserType((userType = response));
       });

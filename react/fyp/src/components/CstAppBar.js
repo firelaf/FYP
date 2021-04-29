@@ -8,15 +8,19 @@ import {
   List,
   ListItem,
 } from "@material-ui/core";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import CalendarViewDayIcon from "@material-ui/icons/CalendarViewDay";
 
-//import CstDrawer from "./CstDrawer";
+function redirectTo(history, path) {
+  history.push(path);
+}
 
 const CstAppBar = () => {
   let menuIcon;
   let disabled;
+
+  const history = useHistory();
   let location = useLocation();
   if (location.pathname !== "/") {
     menuIcon = <MenuIcon />;
@@ -57,7 +61,14 @@ const CstAppBar = () => {
         disableSwipeToOpen={disabled}
       >
         <List component="nav">
-          <ListItem button selected>
+          <ListItem
+            button
+            selected
+            onClick={() => {
+              redirectTo(history, "/dashboard/schedule");
+              toggleDrawer(false);
+            }}
+          >
             <CalendarViewDayIcon />
             Schedule
           </ListItem>

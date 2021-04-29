@@ -1,16 +1,35 @@
 import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { Typography, Avatar, CardActionArea } from "@material-ui/core";
+import {
+  Typography,
+  Avatar,
+  CardActionArea,
+  IconButton,
+} from "@material-ui/core";
 import FiberSmartRecordIcon from "@material-ui/icons/FiberSmartRecord";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-const Event = () => {
+const Event = (props) => {
+  console.log(props.date, props.calendarDate);
   return (
-    <div style={{ width: "70vw" }}>
-      <Card style={{ backgroundColor: "#ffc4ff", borderBottom: "15px" }}>
-        <CardContent>
-          <Typography variant="h5">7:30 - 8:45</Typography>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        width: "70vw",
+        marginRight: "5vw",
+        position: "absolute",
+        top: `${props.offset}px`,
+        height: `${props.bottom - props.offset}px`,
+        right: "0%",
+      }}
+    >
+      <Card style={{ backgroundColor: "#ffc4ff", width: "100%" }}>
+        <CardContent style={{ padding: "10px" }}>
+          <Typography variant="h5">
+            {props.startTime} - {props.endTime}
+          </Typography>
           <div
             style={{
               display: "flex",
@@ -36,7 +55,9 @@ const Event = () => {
               </Avatar>
               <Typography>John Smith</Typography>
             </div>
-            <ChevronRightIcon style={{ color: "#9c64a6" }} fontSize="large" />
+            <IconButton>
+              <ChevronRightIcon style={{ color: "#9c64a6" }} fontSize="large" />
+            </IconButton>
           </div>
           <Typography variant="subtitle2">Placeholder Shift Details</Typography>
           <CardActionArea
