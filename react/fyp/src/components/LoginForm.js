@@ -1,17 +1,32 @@
 import React from "react";
 // import CstAppBar from "./CstAppBar";
-import { useState } from "react";
-import { TextField, Button } from "@material-ui/core";
+import { useState, useEffect } from "react";
+import { TextField, Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 
 const LoginForm = () => {
   const history = useHistory();
+  //Initial auto-authentication
+  useEffect(() => {
+    fetch("http://localhost:5000/login/isAuth", {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((response) => {
+        return response.text();
+      })
+      .then((response) => console.log(response));
+  }, []);
+
   //Submission
   const [loginInfo, newLogin] = useState({
     email: "",
     pass: "",
   });
+
+  const [loginError, updateLoginError] = useState("");
 
   function handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -45,8 +60,10 @@ const LoginForm = () => {
           // localStorage.setItem("userType", response.userType);
           // localStorage.setItem("sessionID", response.sessionID);
           // console.log(response.status);
-          if (response.status === 202) history.push("/dashboard/schedule");
-          else console.log(response);
+          if (response.status === 202) {
+            updateLoginError("");
+            history.push("/dashboard/schedule");
+          } else updateLoginError(response);
         });
     }
   }
@@ -176,6 +193,8 @@ const LoginForm = () => {
             aria-label="Passoword"
             className={textboxStyles.root}
           />
+
+          <Typography>{loginError}</Typography>
 
           <Button
             onClick={handleSubmit}
