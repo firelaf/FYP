@@ -17,8 +17,10 @@ const LoginForm = () => {
       .then((response) => {
         return response.text();
       })
-      .then((response) => console.log(response));
-  }, []);
+      .then((response) => {
+        if (response !== "false") history.push("/dashboard/schedule");
+      });
+  }, [history]);
 
   //Submission
   const [loginInfo, newLogin] = useState({
@@ -89,13 +91,17 @@ const LoginForm = () => {
     email: false,
     pass: false,
   });
+  // const fastValidation = useRef({
+  //   email: false,
+  //   pass: false,
+  // });
 
   const validateInput = () => {
     if (!fastValidation.email)
       enableFastValidation((prevState) => {
         return { ...prevState, email: true };
       });
-    if (!fastValidation.email)
+    if (!fastValidation.pass)
       enableFastValidation((prevState) => {
         return { ...prevState, pass: true };
       });
