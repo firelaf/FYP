@@ -4,7 +4,7 @@ import Event from "./subcomponents/Event";
 import DateNav from "./DateNav";
 
 let shifts = [
-  { startTime: "7:30", endTime: "8:30", session_id: "0", date: "2021-04-28" },
+  { startTime: "7:30", endTime: "8:30", session_id: "0", date: "2021-04-30" },
   { startTime: "9:45", endTime: "12:00", session_id: "1", date: "2021-04-29" },
 ];
 
@@ -23,37 +23,49 @@ function calculatePosition(topLimit, bottomLimit, hours, minutes) {
 const Calendar = () => {
   const firstCell = useRef();
   const lastCell = useRef();
+  let cellPos = useRef({
+    first: 0,
+    last: 0,
+  });
+
+  let [cellsRendered, toggleCellsRendered] = useState(false);
+
   const [lineOffset, changeOffset] = useState("0");
   const [displayLine, toggleLine] = useState("inline");
-  const [calendarDate, changeDate] = useState(new Date());
-  let [renderEvents, changeEvents] = useState([]);
+  let [calendarDate, updateDate] = useState(new Date());
 
-  //This happens only once when the page is loaded
+  function initialCellsRender() {
+    if (!cellsRendered) {
+      toggleCellsRendered(true);
+      cellPos.current = {
+        first: firstCell.current.offsetTop,
+        last: lastCell.current.offsetTop,
+      };
+      changeOffset(
+        calculatePosition(
+          cellPos.current.first,
+          cellPos.current.last,
+          calendarDate.getHours(),
+          calendarDate.getMinutes()
+        )
+      );
+    }
+
+    if (new Date(calendarDate).getDate() === new Date().getDate())
+      toggleLine("inline");
+    else toggleLine("none");
+  }
+
   useEffect(() => {
-    const firstCellPos = firstCell.current.offsetTop;
-    const lastCellPos = lastCell.current.offsetTop;
-    const DT = new Date();
-    updateLine(firstCellPos, lastCellPos);
-    if (DT.getHours() > 21 || DT.getHours() < 7) toggleLine("none");
-    else toggleLine("inline");
+    initialCellsRender();
+  });
 
-    changeOffset(
-      calculatePosition(
-        firstCellPos,
-        lastCellPos,
-        DT.getHours(),
-        DT.getMinutes()
-      )
-    );
-    changeEvents(updateShifts(firstCellPos, lastCellPos));
-    //ESLINT gives a warning in case of infinite loops.
-    //I've chosen to ignore it since no infinite loops can
-    //occur when only calling useEffect() once (empty array []).
-    //eslint-disable-next-line
+  useEffect(() => {
+    updateLine();
+    // eslint-disable-next-line
   }, []);
 
-  function updateShifts(firstCellPos, lastCellPos) {
-    console.log("shfits updated");
+  function buildEvents() {
     return shifts.map((item) => {
       const startTimeParsed = item.startTime.split(":");
       const endTimeParsed = item.endTime.split(":");
@@ -65,14 +77,14 @@ const Calendar = () => {
           date={new Date(item.date)}
           calendarDate={calendarDate}
           offset={calculatePosition(
-            firstCellPos,
-            lastCellPos,
+            cellPos.current.first,
+            cellPos.current.last,
             +startTimeParsed[0],
             +startTimeParsed[1]
           )}
           bottom={calculatePosition(
-            firstCellPos,
-            lastCellPos,
+            cellPos.current.first,
+            cellPos.current.last,
             +endTimeParsed[0],
             +endTimeParsed[1]
           )}
@@ -83,7 +95,7 @@ const Calendar = () => {
 
   //Recursive function which updates the position of the red time indicator
   //every minute
-  function updateLine(firstCellPos, lastCellPos) {
+  function updateLine() {
     setTimeout(() => {
       const DT = new Date();
 
@@ -94,26 +106,15 @@ const Calendar = () => {
 
       changeOffset(
         calculatePosition(
-          firstCellPos,
-          lastCellPos,
+          cellPos.current.first,
+          cellPos.current.last,
           DT.getHours(),
           DT.getMinutes()
         )
       );
-      updateLine(firstCellPos, lastCellPos);
+      updateLine();
       console.log("updated line");
     }, 60000);
-  }
-
-  function incDate(currentDate) {
-    let placeholder = new Date(currentDate);
-    placeholder = placeholder.setDate(placeholder.getDate() + 1);
-    changeDate(new Date(placeholder));
-  }
-  function decDate(currentDate) {
-    let placeholder = new Date(currentDate);
-    placeholder = placeholder.setDate(placeholder.getDate() - 1);
-    changeDate(new Date(placeholder));
   }
 
   return (
@@ -131,11 +132,7 @@ const Calendar = () => {
           display: `${displayLine}`,
         }}
       />
-      <DateNav
-        increment={() => incDate(calendarDate)}
-        decrement={() => decDate(calendarDate)}
-        currentDate={calendarDate}
-      />
+      <DateNav changeDate={(date) => updateDate(new Date(date))} />
       <Cell label="7:00" ref={firstCell} />
       <Cell label="8:00" />
       <Cell label="9:00" />
@@ -151,7 +148,7 @@ const Calendar = () => {
       <Cell label="19:00" />
       <Cell label="20:00" />
       <div id="placeholder" ref={lastCell} />
-      {renderEvents}
+      {buildEvents()}
     </div>
   );
 };

@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paper, IconButton, Typography } from "@material-ui/core";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 const DateNav = (props) => {
-  //const [date, changeDate] = useState(new Date());
+  const [date, updateDate] = useState(new Date());
 
+  const changeDate = props.changeDate; //This is to make ESLINT shut up
+
+  function handleDateUpdate(date, op) {
+    let placeholder = new Date(date);
+    if (op === "-")
+      placeholder = placeholder.setDate(placeholder.getDate() - 1);
+    else placeholder = placeholder.setDate(placeholder.getDate() + 1);
+    updateDate(new Date(placeholder));
+    changeDate(new Date(placeholder));
+  }
   return (
     <div>
       <Paper
@@ -20,18 +30,18 @@ const DateNav = (props) => {
       >
         <IconButton
           onClick={() => {
-            props.decrement();
+            handleDateUpdate(new Date(date), "-");
           }}
         >
           <ArrowLeftIcon />
         </IconButton>
         <Typography>
-          {props.currentDate.getDate()}/{props.currentDate.getMonth() + 1}/
-          {props.currentDate.getFullYear()}
+          {new Date(date).getDate()}/{new Date(date).getMonth()}/
+          {new Date(date).getFullYear()}
         </Typography>
         <IconButton
           onClick={() => {
-            props.increment();
+            handleDateUpdate(new Date(date), "+");
           }}
         >
           <ArrowRightIcon />

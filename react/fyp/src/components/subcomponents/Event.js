@@ -12,9 +12,10 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const Event = (props) => {
   useEffect(() => {
-    console.log(props.date, props.calendarDate);
+    console.log("rendered");
   });
   function displayControl(eventDate, calDate) {
+    console.log(eventDate.getDate(), calDate.getDate());
     if (eventDate.getDate() === calDate.getDate()) return "flex";
     else return "none";
   }
