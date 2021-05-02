@@ -18,6 +18,7 @@ const LoginForm = () => {
         return response.text();
       })
       .then((response) => {
+        console.log(response);
         if (response !== "false") history.push("/dashboard/schedule");
       });
   }, [history]);

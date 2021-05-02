@@ -65,6 +65,7 @@ router.get("/logout", (req, res) => {
   req.session.user_id = null;
   req.session.user_type = null;
   req.session.destroy();
+  res.status(200).send("logout_success");
 });
 
 router.get("/isAuth", (req, res) => {

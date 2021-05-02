@@ -36,7 +36,7 @@ const DateNav = (props) => {
           <ArrowLeftIcon />
         </IconButton>
         <Typography>
-          {new Date(date).getDate()}/{new Date(date).getMonth()}/
+          {new Date(date).getDate()}/{new Date(date).getMonth() + 1}/
           {new Date(date).getFullYear()}
         </Typography>
         <IconButton

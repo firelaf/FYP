@@ -11,9 +11,24 @@ import {
 import { useLocation, useHistory } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import CalendarViewDayIcon from "@material-ui/icons/CalendarViewDay";
+import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 
 function redirectTo(history, path) {
   history.push(path);
+}
+
+function logOut(history) {
+  fetch("http://localhost:5000/login/logout", {
+    method: "GET",
+    mode: "cors",
+    credentials: "include",
+  })
+    .then((response) => {
+      return response.text();
+    })
+    .then((response) => {
+      if (response === "logout_success") redirectTo(history, "/");
+    });
 }
 
 const CstAppBar = () => {
@@ -73,6 +88,16 @@ const CstAppBar = () => {
             Schedule
           </ListItem>
           <ListItem divider />
+          <ListItem
+            button
+            onClick={() => {
+              logOut(history);
+              toggleDrawer(false);
+            }}
+          >
+            <MeetingRoomIcon />
+            Log Out
+          </ListItem>
         </List>
       </SwipeableDrawer>
     </div>

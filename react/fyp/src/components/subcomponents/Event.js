@@ -7,16 +7,22 @@ import {
   CardActionArea,
   IconButton,
 } from "@material-ui/core";
+import { useTheme } from "@material-ui/core/styles";
 import FiberSmartRecordIcon from "@material-ui/icons/FiberSmartRecord";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 const Event = (props) => {
+  const theme = useTheme();
   useEffect(() => {
     console.log("rendered");
   });
   function displayControl(eventDate, calDate) {
-    console.log(eventDate.getDate(), calDate.getDate());
-    if (eventDate.getDate() === calDate.getDate()) return "flex";
+    if (
+      eventDate.getDate() === calDate.getDate() &&
+      eventDate.getMonth() === calDate.getMonth() &&
+      eventDate.getFullYear() === calDate.getFullYear()
+    )
+      return "flex";
     else return "none";
   }
 

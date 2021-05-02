@@ -5,9 +5,10 @@ import AddIcon from "@material-ui/icons/Add";
 import Calendar from "./Calendar";
 
 const Schedule = () => {
-  let history = useHistory();
+  const history = useHistory();
 
-  let [userType, updateUserType] = useState("unknown");
+  const [userType, updateUserType] = useState(null);
+  const [calendarType] = useState("availability");
 
   useEffect(() => {
     // console.log("updated");
@@ -20,24 +21,17 @@ const Schedule = () => {
       credentials: "include",
     })
       .then((response) => {
+        console.log(response.status);
+        if (response.status !== 202) history.push("/");
         return response.text();
       })
       .then((response) => {
         // console.log(response);
         // eslint-disable-next-line
-        updateUserType((userType = response));
+        updateUserType(response);
+        console.log(response);
       });
-  }, []);
-
-  function logOut() {
-    fetch("http://localhost:5000/login/logout", {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-    });
-
-    history.push("/");
-  }
+  }, [history]);
 
   return (
     <div
@@ -47,8 +41,7 @@ const Schedule = () => {
     >
       <h1>{userType}</h1>
       <h1>Schedule</h1>
-      <button onClick={logOut}>log out</button>
-      <Calendar />
+      {userType && <Calendar userType={userType} calendarType={calendarType} />}
       <Fab
         size="large"
         style={{ position: "fixed", bottom: "30px", right: "30px" }}

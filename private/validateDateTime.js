@@ -8,7 +8,7 @@ module.exports = (shift) => {
 
   //Date oject for the start of the shift
   shiftStart = new Date(
-    2021,
+    shift.year,
     shift.month - 1,
     shift.day,
     startTimeSplit[0],
@@ -17,7 +17,7 @@ module.exports = (shift) => {
 
   //Date object for the end of the shift
   shiftEnd = new Date(
-    2021,
+    shift.year,
     shift.month - 1,
     shift.day,
     endTimeSplit[0],

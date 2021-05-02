@@ -8,7 +8,6 @@ const addSessionToDB = require("../private/addSessionToDB");
 
 //Process for sending requests from student
 router.post("/sendRequest", (req, res) => {
-  //console.log(req.body["practical-type"]);
   let userType = req.session.user_type;
 
   let practicalSupport = false;
@@ -27,6 +26,7 @@ router.post("/sendRequest", (req, res) => {
     endTime: req.body.endTime,
     day: +req.body.day,
     month: +req.body.month,
+    year: +req.body.year,
     details: req.body.details,
     practicalSupport: practicalSupport,
     noteTakingSupport: noteTakingSupport,
@@ -52,7 +52,7 @@ router.post("/sendRequest", (req, res) => {
 });
 
 //Pulling the requests from the database to view by the admin or student
-router.post("/requests", (req, res) => {
+router.get("/requests", (req, res) => {
   let sql;
   let userType = req.session.user_type;
 
@@ -77,7 +77,7 @@ router.post("/requests", (req, res) => {
   }
 });
 
-router.post("/availability", (req, res) => {
+router.get("/availability", (req, res) => {
   let userType = req.session.user_type;
 
   function sendResults(sql) {

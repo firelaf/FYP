@@ -3,10 +3,10 @@ import Cell from "./subcomponents/Cell";
 import Event from "./subcomponents/Event";
 import DateNav from "./DateNav";
 
-let shifts = [
-  { startTime: "7:30", endTime: "8:30", session_id: "0", date: "2021-04-30" },
-  { startTime: "9:45", endTime: "12:00", session_id: "1", date: "2021-04-29" },
-];
+// let shifts = [
+//   { startTime: "7:30", endTime: "8:30", session_id: "0", date: "2021-04-30" },
+//   { startTime: "9:45", endTime: "12:00", session_id: "1", date: "2021-04-29" },
+// ];
 
 //Calculates how much an element should be offset based on time, so they appear
 //correctly on the time graph
@@ -20,7 +20,7 @@ function calculatePosition(topLimit, bottomLimit, hours, minutes) {
   return String(Math.round(position));
 }
 
-const Calendar = () => {
+const Calendar = (props) => {
   const firstCell = useRef();
   const lastCell = useRef();
   let cellPos = useRef({
@@ -28,11 +28,16 @@ const Calendar = () => {
     last: 0,
   });
 
-  let [cellsRendered, toggleCellsRendered] = useState(false);
+  const [cellsRendered, toggleCellsRendered] = useState(false);
 
+  let lineTimer = useRef();
   const [lineOffset, changeOffset] = useState("0");
   const [displayLine, toggleLine] = useState("inline");
-  let [calendarDate, updateDate] = useState(new Date());
+
+  const [calendarDate, updateDate] = useState(new Date());
+
+  const [shifts, updateShifts] = useState([]);
+  let shiftsJSON = useRef([]);
 
   function initialCellsRender() {
     if (!cellsRendered) {
@@ -41,17 +46,13 @@ const Calendar = () => {
         first: firstCell.current.offsetTop,
         last: lastCell.current.offsetTop,
       };
-      changeOffset(
-        calculatePosition(
-          cellPos.current.first,
-          cellPos.current.last,
-          calendarDate.getHours(),
-          calendarDate.getMinutes()
-        )
-      );
     }
 
-    if (new Date(calendarDate).getDate() === new Date().getDate())
+    if (
+      new Date(calendarDate).getDate() === new Date().getDate() &&
+      new Date(calendarDate).getMonth() === new Date().getMonth() &&
+      new Date(calendarDate).getFullYear() === new Date().getFullYear()
+    )
       toggleLine("inline");
     else toggleLine("none");
   }
@@ -61,20 +62,59 @@ const Calendar = () => {
   });
 
   useEffect(() => {
+    updateShifts(buildEvents(shiftsJSON.current));
+    // eslint-disable-next-line
+  }, [calendarDate]);
+
+  useEffect(() => {
+    changeOffset(
+      calculatePosition(
+        cellPos.current.first,
+        cellPos.current.last,
+        calendarDate.getHours(),
+        calendarDate.getMinutes()
+      )
+    );
     updateLine();
+    requestEvents();
+    return () => clearTimeout(lineTimer.current);
     // eslint-disable-next-line
   }, []);
 
-  function buildEvents() {
-    return shifts.map((item) => {
-      const startTimeParsed = item.startTime.split(":");
-      const endTimeParsed = item.endTime.split(":");
-      return (
+  function requestEvents() {
+    if (props.userType === "W" && props.calendarType === "availability") {
+      fetch("http://localhost:5000/database/availability", {
+        mode: "cors",
+        credentials: "include",
+        method: "GET",
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          shiftsJSON.current = response;
+          console.log(shiftsJSON.current);
+          //console.log(buildEvents(shiftsJSON));
+          updateShifts(buildEvents(shiftsJSON.current));
+        });
+    }
+  }
+
+  function buildEvents(shiftsArray) {
+    return shiftsArray.map((item) => {
+      let startTimeParsed = ["", ""];
+      let endTimeParsed = ["", ""];
+      if (item !== undefined || null) {
+        startTimeParsed = item.unavailableFrom.split(":");
+        endTimeParsed = item.unavailableTo.split(":");
+      }
+
+      return item !== null || undefined ? (
         <Event
-          key={item.session_id}
-          startTime={item.startTime}
-          endTime={item.endTime}
-          date={new Date(item.date)}
+          key={item.session_id.toString()}
+          startTime={`${startTimeParsed[0]}:${startTimeParsed[1]}`}
+          endTime={`${endTimeParsed[0]}:${endTimeParsed[1]}`}
+          date={new Date(item.availableDate)}
           calendarDate={calendarDate}
           offset={calculatePosition(
             cellPos.current.first,
@@ -89,15 +129,16 @@ const Calendar = () => {
             +endTimeParsed[1]
           )}
         />
-      );
+      ) : null;
     });
   }
 
   //Recursive function which updates the position of the red time indicator
   //every minute
   function updateLine() {
-    setTimeout(() => {
+    lineTimer.current = setTimeout(() => {
       const DT = new Date();
+      console.log("updated line");
 
       //Disables the rd time indicator if the time is outside of the possible
       //working hours
@@ -113,7 +154,6 @@ const Calendar = () => {
         )
       );
       updateLine();
-      console.log("updated line");
     }, 60000);
   }
 
@@ -132,7 +172,11 @@ const Calendar = () => {
           display: `${displayLine}`,
         }}
       />
-      <DateNav changeDate={(date) => updateDate(new Date(date))} />
+      <DateNav
+        changeDate={(date) => {
+          updateDate(new Date(date));
+        }}
+      />
       <Cell label="7:00" ref={firstCell} />
       <Cell label="8:00" />
       <Cell label="9:00" />
@@ -148,7 +192,7 @@ const Calendar = () => {
       <Cell label="19:00" />
       <Cell label="20:00" />
       <div id="placeholder" ref={lastCell} />
-      {buildEvents()}
+      {shifts}
     </div>
   );
 };

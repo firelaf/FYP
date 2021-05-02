@@ -4,10 +4,10 @@ module.exports = (userType, shift, httpRes) => {
   let sql;
   if (userType === "S") {
     sql =
-      "SELECT * FROM requests WHERE requester_id = ? AND NOT (endTime <= ? OR startTime >= ?) AND requestDate = '2021-?-?';";
+      "SELECT * FROM requests WHERE requester_id = ? AND NOT (endTime <= ? OR startTime >= ?) AND requestDate = '?-?-?';";
   } else if (userType === "W") {
     sql =
-      "SELECT * FROM availability WHERE worker_id = ? AND NOT (unavailableTo <= ? OR unavailableFrom >= ?) AND availableDate = '2021-?-?';";
+      "SELECT * FROM availability WHERE worker_id = ? AND NOT (unavailableTo <= ? OR unavailableFrom >= ?) AND availableDate = '?-?-?';";
   }
   db.query(
     sql,
@@ -15,6 +15,7 @@ module.exports = (userType, shift, httpRes) => {
       shift.requester_id,
       shift.startTime,
       shift.endTime,
+      shift.year,
       shift.month,
       shift.day,
     ],
@@ -33,11 +34,11 @@ function addToDB(userType, shift, httpRes) {
   let redirectRoute;
   if (userType === "S") {
     sql =
-      "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id, details, practicalType, noteTakingType) VALUES(?, ?, '2021-?-?', ?, ?, ?, ?, ?);";
+      "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id, details, practicalType, noteTakingType) VALUES(?, ?, '?-?-?', ?, ?, ?, ?, ?);";
     redirectRoute = "/dashboard/student";
   } else if (userType === "W") {
     sql =
-      "INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, setByWorker) VALUES(?, ?, '2021-?-?', ?, TRUE);";
+      "INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, session_id, setByWorker) VALUES(?, ?, '?-?-?', ?,?, TRUE);";
     redirectRoute = "/dashboard/worker";
   }
 
@@ -47,6 +48,7 @@ function addToDB(userType, shift, httpRes) {
       [
         shift.startTime, //Time where the session/unavailability window beings
         shift.endTime, //Time when it ends
+        shift.year,
         shift.month,
         shift.day,
         shift.requester_id, //User ID session cookie
