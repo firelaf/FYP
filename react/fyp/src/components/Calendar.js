@@ -37,7 +37,8 @@ const Calendar = (props) => {
   const [calendarDate, updateDate] = useState(new Date());
 
   const [shifts, updateShifts] = useState([]);
-  let shiftsJSON = useRef([]);
+  let availabilityJSON = useRef([]);
+  let requestsJSON = useRef([]);
 
   function initialCellsRender() {
     if (!cellsRendered) {
@@ -59,10 +60,15 @@ const Calendar = (props) => {
 
   useEffect(() => {
     initialCellsRender();
+    console.log(shifts);
   });
 
   useEffect(() => {
-    updateShifts(buildEvents(shiftsJSON.current));
+    updateShifts(
+      buildEvents(availabilityJSON.current, "availability").concat(
+        buildEvents(requestsJSON.current, "shifts")
+      )
+    );
     // eslint-disable-next-line
   }, [calendarDate]);
 
@@ -81,32 +87,51 @@ const Calendar = (props) => {
     // eslint-disable-next-line
   }, []);
 
-  function requestEvents() {
-    if (props.userType === "W" && props.calendarType === "availability") {
-      fetch("http://localhost:5000/database/availability", {
-        mode: "cors",
-        credentials: "include",
-        method: "GET",
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          shiftsJSON.current = response;
-          console.log(shiftsJSON.current);
-          //console.log(buildEvents(shiftsJSON));
-          updateShifts(buildEvents(shiftsJSON.current));
-        });
+  async function requestEvents() {
+    let availability;
+    let requests;
+    if (props.userType === "W" && props.calendarType.includes("availability")) {
+      availability = await fetch(
+        "http://localhost:5000/database/availability",
+        {
+          mode: "cors",
+          credentials: "include",
+          method: "GET",
+        }
+      );
+      availability = await availability.json();
+      availabilityJSON.current = availability;
+      console.log(availabilityJSON.current);
+      updateShifts(buildEvents(availabilityJSON.current, "availability"));
     }
+    requests = await fetch("http://localhost:5000/database/requests", {
+      mode: "cors",
+      credentials: "include",
+      method: "GET",
+    });
+    requests = await requests.json();
+    console.log(requests);
+    requestsJSON.current = requests;
+    const test = shifts.concat(buildEvents(requestsJSON.current, "shift"));
+    console.log(test);
+    updateShifts((prev) => {
+      return prev.concat(buildEvents(requestsJSON.current, "shift"));
+    });
   }
 
-  function buildEvents(shiftsArray) {
+  function buildEvents(shiftsArray, eventType) {
     return shiftsArray.map((item) => {
       let startTimeParsed = ["", ""];
       let endTimeParsed = ["", ""];
       if (item !== undefined || null) {
-        startTimeParsed = item.unavailableFrom.split(":");
-        endTimeParsed = item.unavailableTo.split(":");
+        startTimeParsed =
+          eventType === "availability"
+            ? item.unavailableFrom.split(":")
+            : item.startTime.split(":");
+        endTimeParsed =
+          eventType === "availability"
+            ? item.unavailableTo.split(":")
+            : item.endTime.split(":");
       }
 
       return item !== null || undefined ? (
@@ -114,8 +139,15 @@ const Calendar = (props) => {
           key={item.session_id.toString()}
           startTime={`${startTimeParsed[0]}:${startTimeParsed[1]}`}
           endTime={`${endTimeParsed[0]}:${endTimeParsed[1]}`}
-          date={new Date(item.availableDate)}
+          date={
+            new Date(
+              eventType === "availability"
+                ? item.availableDate
+                : item.requestDate
+            )
+          }
           calendarDate={calendarDate}
+          type={eventType}
           offset={calculatePosition(
             cellPos.current.first,
             cellPos.current.last,

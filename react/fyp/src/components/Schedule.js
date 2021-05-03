@@ -8,29 +8,30 @@ const Schedule = () => {
   const history = useHistory();
 
   const [userType, updateUserType] = useState(null);
-  const [calendarType] = useState("availability");
+  const [calendarType] = useState(["availability", "shifts"]);
 
   useEffect(() => {
     // console.log("updated");
   }, [userType]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/login/isAuth", {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.status !== 202) history.push("/");
-        return response.text();
-      })
-      .then((response) => {
+    async function fetchIsAuth() {
+      let response = await fetch("http://localhost:5000/login/isAuth", {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+      });
+      console.log(response.status);
+      if (response.status !== 202) history.push("/");
+      else {
+        response = await response.text();
         // console.log(response);
         // eslint-disable-next-line
         updateUserType(response);
         console.log(response);
-      });
+      }
+    }
+    fetchIsAuth();
   }, [history]);
 
   return (

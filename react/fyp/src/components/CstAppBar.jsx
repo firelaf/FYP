@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,6 +7,7 @@ import {
   SwipeableDrawer,
   List,
   ListItem,
+  Checkbox,
 } from "@material-ui/core";
 import { useLocation, useHistory } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -32,6 +33,15 @@ function logOut(history) {
 }
 
 const CstAppBar = () => {
+  let closeRedirect = useRef("/dashboard/schedule");
+
+  const checkbox1 = useRef();
+  const checkbox2 = useRef();
+  const [checkedBoxes, updateBoxes] = useState({
+    checkbox1: false,
+    checkbox2: false,
+  });
+
   let menuIcon;
   let disabled;
 
@@ -54,6 +64,27 @@ const CstAppBar = () => {
 
   const [drawerState, toggleDrawer] = useState(false);
 
+  function handleClose() {
+    toggleDrawer(false);
+    if (location !== closeRedirect) history.push(closeRedirect.current);
+  }
+
+  function handleCheckbox() {
+    if (checkbox1.current.checked && checkbox2.current.checked) {
+      closeRedirect.current = "/dashboard/schedule/s&a";
+      updateBoxes({ checkbox1: true, checkbox2: true });
+    } else if (checkbox1.current.checked) {
+      closeRedirect.current = "/dashboard/schedule/s";
+      updateBoxes({ checkbox1: true, checkbox2: false });
+    } else if (checkbox2.current.checked) {
+      closeRedirect.current = "/dashboard/schedule/a";
+      updateBoxes({ checkbox1: false, checkbox2: true });
+    } else {
+      closeRedirect.current = "/dashboard/schedule";
+      updateBoxes({ checkbox1: false, checkbox2: false });
+    }
+  }
+
   return (
     <div>
       <AppBar color="primary">
@@ -72,13 +103,16 @@ const CstAppBar = () => {
       <SwipeableDrawer
         open={drawerState}
         onOpen={() => toggleDrawer(true)}
-        onClose={() => toggleDrawer(false)}
+        onClose={() => handleClose()}
         disableSwipeToOpen={disabled}
       >
         <List component="nav">
           <ListItem
             button
             selected
+            style={{
+              marginTop: "20vh",
+            }}
             onClick={() => {
               redirectTo(history, "/dashboard/schedule");
               toggleDrawer(false);
@@ -87,6 +121,25 @@ const CstAppBar = () => {
             <CalendarViewDayIcon />
             Schedule
           </ListItem>
+
+          <ListItem>
+            <Checkbox
+              inputRef={checkbox1}
+              onChange={() => handleCheckbox()}
+              checked={checkedBoxes.checkbox1}
+            />
+            Shifts
+          </ListItem>
+
+          <ListItem>
+            <Checkbox
+              inputRef={checkbox2}
+              onChange={() => handleCheckbox()}
+              checked={checkedBoxes.checkbox2}
+            />
+            Availability
+          </ListItem>
+
           <ListItem divider />
           <ListItem
             button

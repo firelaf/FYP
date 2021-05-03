@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // import { useState } from "react";
-import CstAppBar from "./components/CstAppBar";
+import CstAppBar from "./components/CstAppBar.jsx";
 import LoginForm from "./components/LoginForm";
 import Schedule from "./components/Schedule";
 
