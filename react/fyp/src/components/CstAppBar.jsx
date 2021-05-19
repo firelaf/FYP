@@ -38,7 +38,7 @@ const CstAppBar = () => {
   const checkbox1 = useRef();
   const checkbox2 = useRef();
   const [checkedBoxes, updateBoxes] = useState({
-    checkbox1: false,
+    checkbox1: true,
     checkbox2: false,
   });
 
@@ -63,6 +63,26 @@ const CstAppBar = () => {
   }
 
   const [drawerState, toggleDrawer] = useState(false);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/dashboard/schedule":
+        updateBoxes({ checkbox1: false, checkbox2: false });
+        break;
+      case "/dashboard/schedule/s":
+        updateBoxes({ checkbox1: true, checkbox2: false });
+        break;
+      case "/dashboard/schedule/a":
+        updateBoxes({ checkbox1: false, checkbox2: true });
+        break;
+      case "/dashboard/schedule/s&a":
+        updateBoxes({ checkbox1: true, checkbox2: true });
+        break;
+      default:
+        updateBoxes({ checkbox1: false, checkbox2: false });
+        break;
+    }
+  }, [drawerState, location.pathname]);
 
   function handleClose() {
     toggleDrawer(false);

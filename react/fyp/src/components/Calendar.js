@@ -60,13 +60,12 @@ const Calendar = (props) => {
 
   useEffect(() => {
     initialCellsRender();
-    console.log(shifts);
   });
 
   useEffect(() => {
     updateShifts(
       buildEvents(availabilityJSON.current, "availability").concat(
-        buildEvents(requestsJSON.current, "shifts")
+        buildEvents(requestsJSON.current, "shift")
       )
     );
     // eslint-disable-next-line
@@ -90,30 +89,21 @@ const Calendar = (props) => {
   async function requestEvents() {
     let availability;
     let requests;
-    if (props.userType === "W" && props.calendarType.includes("availability")) {
-      availability = await fetch(
-        "http://localhost:5000/database/availability",
-        {
-          mode: "cors",
-          credentials: "include",
-          method: "GET",
-        }
-      );
-      availability = await availability.json();
-      availabilityJSON.current = availability;
-      console.log(availabilityJSON.current);
-      updateShifts(buildEvents(availabilityJSON.current, "availability"));
-    }
+    availability = await fetch("http://localhost:5000/database/availability", {
+      mode: "cors",
+      credentials: "include",
+      method: "GET",
+    });
+    availability = await availability.json();
+    availabilityJSON.current = availability;
+    updateShifts(buildEvents(availabilityJSON.current, "availability"));
     requests = await fetch("http://localhost:5000/database/requests", {
       mode: "cors",
       credentials: "include",
       method: "GET",
     });
     requests = await requests.json();
-    console.log(requests);
     requestsJSON.current = requests;
-    const test = shifts.concat(buildEvents(requestsJSON.current, "shift"));
-    console.log(test);
     updateShifts((prev) => {
       return prev.concat(buildEvents(requestsJSON.current, "shift"));
     });

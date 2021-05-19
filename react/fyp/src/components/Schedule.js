@@ -8,11 +8,6 @@ const Schedule = () => {
   const history = useHistory();
 
   const [userType, updateUserType] = useState(null);
-  const [calendarType] = useState(["availability", "shifts"]);
-
-  useEffect(() => {
-    // console.log("updated");
-  }, [userType]);
 
   useEffect(() => {
     async function fetchIsAuth() {
@@ -42,7 +37,7 @@ const Schedule = () => {
     >
       <h1>{userType}</h1>
       <h1>Schedule</h1>
-      {userType && <Calendar userType={userType} calendarType={calendarType} />}
+      {userType && <Calendar userType={userType} />}
       <Fab
         size="large"
         style={{ position: "fixed", bottom: "30px", right: "30px" }}

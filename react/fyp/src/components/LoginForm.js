@@ -19,7 +19,7 @@ const LoginForm = () => {
       })
       .then((response) => {
         console.log(response);
-        if (response !== "false") history.push("/dashboard/schedule");
+        if (response !== "false") history.push("/dashboard/schedule/s");
       });
   }, [history]);
 
@@ -65,7 +65,7 @@ const LoginForm = () => {
           // console.log(response.status);
           if (response.status === 202) {
             updateLoginError("");
-            history.push("/dashboard/schedule");
+            history.push("/dashboard/schedule/s");
           } else updateLoginError(response);
         });
     }

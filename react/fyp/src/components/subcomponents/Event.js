@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import {
@@ -7,7 +8,7 @@ import {
   CardActionArea,
   IconButton,
 } from "@material-ui/core";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import FiberSmartRecordIcon from "@material-ui/icons/FiberSmartRecord";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
@@ -36,13 +37,39 @@ function compareDates(date1, date2) {
 }
 
 const Event = (props) => {
-  const theme = useTheme();
+  const location = useLocation();
+  //const theme = useTheme();
   const classes = useStyles();
+  const wrapper = useRef();
+
   useEffect(() => {
     checkLive();
+    if (compareDates(new Date(props.date), new Date(props.calendarDate))) {
+      switch (location.pathname) {
+        case "/dashboard/schedule":
+          wrapper.current.style.display = "none";
+          break;
+        case "/dashboard/schedule/s":
+          if (props.type === "shift") wrapper.current.style.display = "flex";
+          else wrapper.current.style.display = "none";
+          break;
+        case "/dashboard/schedule/a":
+          if (props.type === "availability")
+            wrapper.current.style.display = "flex";
+          else wrapper.current.style.display = "none";
+          break;
+        default:
+          wrapper.current.style.display = "flex";
+          break;
+      }
+    } else wrapper.current.style.display = "none";
   });
 
-  let [liveSession, toggleLive] = useState(false);
+  useEffect(() => {
+    //console.log(wrapper.current.style.display);
+  }, [location.pathname]);
+
+  const [liveSession, toggleLive] = useState(false);
   const currentTimeNum = timeToNum(
     `${new Date().getHours()}:${new Date().getMinutes()}`
   );
@@ -58,15 +85,19 @@ const Event = (props) => {
     }
   }
 
-  function displayControl(eventDate, calDate) {
-    if (compareDates(new Date(eventDate), new Date(calDate))) return "flex";
-    else return "none";
-  }
+  // function displayControl(eventDate, calDate) {
+  //   // if (compareDates(new Date(eventDate), new Date(calDate))) return "flex";
+  //   // else return "none";
+  //   if (compareDates(new Date(eventDate), new Date(calDate))) {
+  //     if (location.pathname === "/dashboard/schedule/s&a") return "flex";
+  //   } else return "none";
+  // }
 
   return (
     <div
+      ref={wrapper}
       style={{
-        display: `${displayControl(props.date, props.calendarDate)}`,
+        // display: `${displayControl(props.date, props.calendarDate)}`,
         justifyContent: "flex-end",
         width: "70vw",
         marginRight: "5vw",
