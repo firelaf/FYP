@@ -89,19 +89,26 @@ const Calendar = (props) => {
   async function requestEvents() {
     let availability;
     let requests;
-    availability = await fetch("http://localhost:5000/database/availability", {
-      mode: "cors",
-      credentials: "include",
-      method: "GET",
-    });
-    availability = await availability.json();
-    availabilityJSON.current = availability;
-    updateShifts(buildEvents(availabilityJSON.current, "availability"));
+    if (props.userType !== "S") {
+      availability = await fetch(
+        "http://localhost:5000/database/availability",
+        {
+          mode: "cors",
+          credentials: "include",
+          method: "GET",
+        }
+      );
+      availability = await availability.json();
+      availabilityJSON.current = availability;
+      updateShifts(buildEvents(availabilityJSON.current, "availability"));
+    }
+
     requests = await fetch("http://localhost:5000/database/requests", {
       mode: "cors",
       credentials: "include",
       method: "GET",
     });
+
     requests = await requests.json();
     requestsJSON.current = requests;
     updateShifts((prev) => {

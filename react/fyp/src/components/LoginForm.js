@@ -60,9 +60,6 @@ const LoginForm = () => {
           else return response.text();
         })
         .then((response) => {
-          // localStorage.setItem("userType", response.userType);
-          // localStorage.setItem("sessionID", response.sessionID);
-          // console.log(response.status);
           if (response.status === 202) {
             updateLoginError("");
             history.push("/dashboard/schedule/s");
@@ -92,10 +89,6 @@ const LoginForm = () => {
     email: false,
     pass: false,
   });
-  // const fastValidation = useRef({
-  //   email: false,
-  //   pass: false,
-  // });
 
   const validateInput = () => {
     if (!fastValidation.email)

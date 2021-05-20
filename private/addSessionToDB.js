@@ -58,7 +58,7 @@ function addToDB(userType, shift, httpRes) {
         shift.noteTakingSupport,
       ],
       (err, result) => {
-        httpRes.redirect(redirectRoute);
+        //httpRes.redirect(redirectRoute);
       }
     );
   }

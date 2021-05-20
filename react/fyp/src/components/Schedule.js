@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
 import Calendar from "./Calendar";
+import SlideMenu from "./SlideMenu";
 
 const Schedule = () => {
   const history = useHistory();
@@ -38,12 +37,7 @@ const Schedule = () => {
       <h1>{userType}</h1>
       <h1>Schedule</h1>
       {userType && <Calendar userType={userType} />}
-      <Fab
-        size="large"
-        style={{ position: "fixed", bottom: "30px", right: "30px" }}
-      >
-        <AddIcon />
-      </Fab>
+      <SlideMenu />
     </div>
   );
 };

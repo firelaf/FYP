@@ -85,14 +85,6 @@ const Event = (props) => {
     }
   }
 
-  // function displayControl(eventDate, calDate) {
-  //   // if (compareDates(new Date(eventDate), new Date(calDate))) return "flex";
-  //   // else return "none";
-  //   if (compareDates(new Date(eventDate), new Date(calDate))) {
-  //     if (location.pathname === "/dashboard/schedule/s&a") return "flex";
-  //   } else return "none";
-  // }
-
   return (
     <div
       ref={wrapper}
@@ -129,7 +121,6 @@ const Event = (props) => {
             <div
               style={{
                 display: "flex",
-                // display: props.type === "shift" ? "flex" : "none",
                 alignItems: "center",
               }}
             >
