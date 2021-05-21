@@ -1,0 +1,27 @@
+Non-Medical Support Worker Communication and Organisation Software
+
+Daniel Sergilov P2443155
+
+Development Project
+
+De Montfort University
+
+EXTERNAL DEPENDANCIES - Please install on the running machine
+
+- Node Package Manager
+- MySQL 8.0
+
+STEPS TO RUN
+
+1. Open MySQL Command Line Client (or any client capable of making MySQL queries)
+2. Run these EXACT queries:
+
+alskdjfhaksdfj
+
+3. Navigate to "./private"
+4. Open "database_connection.js" in any text editor
+5. Enter your MySQL authentication information iside the quotation marks
+6. In your prefered command line interface, navigate to the root dir of the project "/"
+7. Execute the command "npm start"
+8. Open your browser (Google Chrome is recommended)
+9. Go to http://localhost:5000
