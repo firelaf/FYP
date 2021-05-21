@@ -80,7 +80,7 @@ INSERT INTO login(user_id, email, username, user_type, pass) VALUES
 5. Enter your MySQL authentication information iside the quotation marks
    -NOTE: Usually, your host will be "localhost", and your user will be "root"
 6. In your prefered command line interface, navigate to the root dir of the project "/"
-7. Execute the commands "npm start"
+7. Execute the commands "npm install" and "npm start" IN THAT ORDER
 8. Open your browser (Google Chrome is recommended)
 9. Go to http://localhost:5000
 10. You can now login into any of the accounts listed bellow:
