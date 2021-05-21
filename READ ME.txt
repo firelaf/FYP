@@ -21,6 +21,8 @@ STEPS TO RUN
 ------------------------------
 CREATE DATABASE userdata;
 ------------------------------
+USE userdata;
+------------------------------
 CREATE TABLE login(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(50),
