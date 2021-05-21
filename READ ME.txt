@@ -9,7 +9,9 @@ De Montfort University
 EXTERNAL DEPENDANCIES - Please install on the running machine
 
 - NodeJS and the NPM package manager
+    http://nodejs.org
 - MySQL 8.0 or later
+    http://dev.mysql.com/downloads/installer
 
 STEPS TO RUN
 
