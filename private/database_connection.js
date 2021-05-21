@@ -6,7 +6,7 @@ const db = mysql.createConnection({
   user: "",
   password: "",
   database: "userdata",
-  insecureAuth: true,
+  //insecureAuth: true,
 });
 
 db.connect((err) => {

@@ -80,7 +80,7 @@ INSERT INTO login(user_id, email, username, user_type, pass) VALUES
 5. Enter your MySQL authentication information iside the quotation marks
    -NOTE: Usually, your host will be "localhost", and your user will be "root"
 6. In your prefered command line interface, navigate to the root dir of the project "/"
-7. Execute the command "npm start"
+7. Execute the commands "npm start"
 8. Open your browser (Google Chrome is recommended)
 9. Go to http://localhost:5000
 10. You can now login into any of the accounts listed bellow:
@@ -100,3 +100,13 @@ To request help as a Student or set yourself as unavailable as a Worker, press t
 enter the details of the desired timeframe and press request.
 To log out, open the sliding menu by sliding from the left or tapping the menu icon in the top-left corner and select "Log Out".
 To choose which type of sessions to be viewed on the calendar, open the sliding menu and select the type of session.
+
+TROUBLESHOOTING
+
+In case of error "ER_NOT_SUPPORTED_AUTH_MODE", go to MySQL client and input this query, where 'password' is your root account's password:
+----------------------------------------------------------------
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+----------------------------------------------------------------
+
+In case of Google Chrome error DNS_PROBE_STARTED, when trying to access localhost:5000, input your LOCAL IP ADDRESS into the address bar,
+followed by :5000 port number.
