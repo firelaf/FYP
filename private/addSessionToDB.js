@@ -35,11 +35,11 @@ function addToDB(userType, shift, httpRes) {
   if (userType === "S") {
     sql =
       "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id, details, practicalType, noteTakingType) VALUES(?, ?, '?-?-?', ?, ?, ?, ?, ?);";
-    redirectRoute = "/dashboard/student";
+    redirectRoute = "http://localhost:3000";
   } else if (userType === "W") {
     sql =
       "INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, session_id, setByWorker) VALUES(?, ?, '?-?-?', ?,?, TRUE);";
-    redirectRoute = "/dashboard/worker";
+    redirectRoute = "http://localhost:3000";
   }
 
   if (sql) {
@@ -58,7 +58,7 @@ function addToDB(userType, shift, httpRes) {
         shift.noteTakingSupport,
       ],
       (err, result) => {
-        //httpRes.redirect(redirectRoute);
+        httpRes.redirect(redirectRoute);
       }
     );
   }

@@ -7,6 +7,7 @@ const Schedule = () => {
   const history = useHistory();
 
   const [userType, updateUserType] = useState(null);
+  const [userTypeStr, updateUserTypeStr] = useState("");
 
   useEffect(() => {
     async function fetchIsAuth() {
@@ -15,14 +16,24 @@ const Schedule = () => {
         mode: "cors",
         credentials: "include",
       });
-      console.log(response.status);
       if (response.status !== 202) history.push("/");
       else {
         response = await response.text();
-        // console.log(response);
-        // eslint-disable-next-line
+        switch (response) {
+          case "W":
+            updateUserTypeStr("Worker");
+            break;
+          case "S":
+            updateUserTypeStr("Student");
+            break;
+          case "A":
+            updateUserTypeStr("Admin");
+            break;
+          default:
+            updateUserTypeStr("");
+            break;
+        }
         updateUserType(response);
-        console.log(response);
       }
     }
     fetchIsAuth();
@@ -34,10 +45,9 @@ const Schedule = () => {
         marginTop: "10vh",
       }}
     >
-      <h1>{userType}</h1>
-      <h1>Schedule</h1>
+      <h1>{userTypeStr}</h1>
       {userType && <Calendar userType={userType} />}
-      <SlideMenu />
+      <SlideMenu userType={userType} />
     </div>
   );
 };

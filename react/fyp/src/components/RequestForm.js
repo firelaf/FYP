@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 
-const RequestForm = () => {
+const RequestForm = (props) => {
   //Declare and initialise the variables
   const startTime = useRef();
   const endTime = useRef();
   const day = useRef();
   const month = useRef();
+  const year = useRef();
   const practicalType = useRef();
   const noteTakingType = useRef();
   const details = useRef();
@@ -35,35 +36,21 @@ const RequestForm = () => {
     dateOptions.push(<option value={i}>{i}</option>);
   }
 
-  const formRef = useRef();
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(
-      startTime.current.value,
-      endTime.current.value,
-      day.current.value,
-      month.current.value,
-      practicalType.current.value,
-      noteTakingType.current.value,
-      details.current.value
-    );
-  };
+  console.log(props.userType);
 
   return (
-    <div style={{ display: "flex" }}>
-      <form
-        action="http://localhost:5000/database/sendRequest"
-        ref={formRef}
-        method="POST"
-      >
+    <div>
+      <form action="http://localhost:5000/database/sendRequest" method="POST">
         <label htmlFor="startTime">Start Time</label>
         <select name="startTime" ref={startTime}>
           {timeOptions}
         </select>
+        <br />
         <label htmlFor="endTime">End Time</label>
         <select name="endTime" ref={endTime}>
           {timeOptions}
         </select>
+        <br />
         <label htmlFor="dateDay">Date:</label>
         <select name="day" ref={day}>
           {dateOptions}
@@ -83,31 +70,42 @@ const RequestForm = () => {
           <option value="12">Dec</option>
         </select>
         <select name="year">
-          <option value="2021">2021</option>
+          <option value="2021" ref={year}>
+            2021
+          </option>
         </select>
 
         <br />
         <br />
 
-        <input type="checkbox" ref={practicalType} name="practical-type" />
-        <label htmlFor="practical-type">Practical Support</label>
+        {props.userType === "S" && (
+          <div>
+            <input type="checkbox" ref={practicalType} name="practical-type" />
+            <label htmlFor="practical-type">Practical Support</label>
 
-        <br />
+            <br />
 
-        <input type="checkbox" ref={noteTakingType} name="note-taking-type" />
-        <label htmlFor="note-taking-type">Note-Taking Support</label>
+            <input
+              type="checkbox"
+              ref={noteTakingType}
+              name="note-taking-type"
+            />
+            <label htmlFor="note-taking-type">Note-Taking Support</label>
 
-        <br />
-        <br />
+            <br />
+            <br />
 
-        <textarea
-          name="details"
-          ref={details}
-          cols="53"
-          rows="10"
-          maxLength="1000"
-          placeholder="Describe what you need help with..."
-        ></textarea>
+            <textarea
+              style={{ maxWidth: "95vw", with: "100vw" }}
+              name="details"
+              ref={details}
+              cols="53"
+              rows="10"
+              maxLength="1000"
+              placeholder="Describe what you need help with..."
+            ></textarea>
+          </div>
+        )}
 
         <br />
 

@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -68,7 +68,7 @@ export default function FullScreenDialog() {
             </Typography>
           </Toolbar>
         </AppBar>
-        <RequestForm />
+        <RequestForm userType={props.userType} />
       </Dialog>
     </div>
   );
