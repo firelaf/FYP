@@ -35,11 +35,11 @@ function addToDB(userType, shift, httpRes) {
   if (userType === "S") {
     sql =
       "INSERT INTO requests(startTime, endTime, requestDate, requester_id, session_id, details, practicalType, noteTakingType) VALUES(?, ?, '?-?-?', ?, ?, ?, ?, ?);";
-    redirectRoute = "http://localhost:3000";
+    redirectRoute = "http://localhost:5000";
   } else if (userType === "W") {
     sql =
       "INSERT INTO availability(unavailableFrom, unavailableTo, availableDate, worker_id, session_id, setByWorker) VALUES(?, ?, '?-?-?', ?,?, TRUE);";
-    redirectRoute = "http://localhost:3000";
+    redirectRoute = "http://localhost:5000";
   }
 
   if (sql) {
